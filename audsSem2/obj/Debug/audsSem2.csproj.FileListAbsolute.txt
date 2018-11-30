@@ -1,0 +1,7 @@
+C:\Users\Pato\source\repos\audsSem2\audsSem2\bin\Debug\audsSem2.exe.config
+C:\Users\Pato\source\repos\audsSem2\audsSem2\bin\Debug\audsSem2.exe
+C:\Users\Pato\source\repos\audsSem2\audsSem2\bin\Debug\audsSem2.pdb
+C:\Users\Pato\source\repos\audsSem2\audsSem2\obj\Debug\audsSem2.csprojAssemblyReference.cache
+C:\Users\Pato\source\repos\audsSem2\audsSem2\obj\Debug\audsSem2.csproj.CoreCompileInputs.cache
+C:\Users\Pato\source\repos\audsSem2\audsSem2\obj\Debug\audsSem2.exe
+C:\Users\Pato\source\repos\audsSem2\audsSem2\obj\Debug\audsSem2.pdb
