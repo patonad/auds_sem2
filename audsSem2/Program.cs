@@ -43,7 +43,7 @@ namespace audsSem2
 
 
 
-            DymHas<Record> hash = new DymHas<Record>(2, 2, new Record(), "pokus.bin");
+            DymHas<Record> hash = new DymHas<Record>(4, new Record(), 2, "pokus.bin",3,"pokusPrepn.bin");
             //hash.Add(new Record(4095, "4045"));
             //hash.Add(new Record(2047, "2047"));
             //hash.Add(new Record(8191, "cc015"));
@@ -54,12 +54,19 @@ namespace audsSem2
             //hash.Add(new Record(8, "ee08"));
             //hash.Add(new Record(9, "ee09"));
             //hash.Add(new Record(10, "ee10"));
-            for (int i = 1; i < 10000; i++)
+            for (int i = 1; i < 17; i++)
             {
+                hash.FInd(new Record(i, "ssss"));
                 hash.Add(new Record(i, i.ToString("0000")));
+                hash.Add(new Record(i, i.ToString("0000")));
+                hash.FInd(new Record(i, "ssss"));
+                hash.FInd(new Record(32, "ssss"));
             }
 
-
+            hash.FInd(new Record(3, "ssss"));
+            hash.FInd(new Record(1, "ssss"));
+            hash.FInd(new Record(17, "ssss"));
+            hash.Prever();
             //hash.Add(new Record(1, "aa01"));
             //hash.Add(new Record(2, "bb02"));
             //hash.Add(new Record(3, "cc03"));

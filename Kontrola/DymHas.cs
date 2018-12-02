@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace audsSem2
 {
@@ -355,7 +355,7 @@ namespace audsSem2
 
         public ExternalNode NajdiExternalNode(T data, ref Block<T> blok)
         {
-           if (Root == null)
+            if (Root == null)
             {
                 blok = new Block<T>(PocetVBloku, DajAdresu(), _typ);
                 return new ExternalNode(0, blok.SvojaAdresa);
@@ -411,14 +411,26 @@ namespace audsSem2
             {
                 var node = najdiNode(data);
                 var blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ);
-                foreach (var blokRecord in blok.Records)
+                while (true)
                 {
-                    if (blokRecord.Equals(data))
+                    foreach (var blokRecord in blok.Records)
                     {
-                        return true;
+                        if (blokRecord.Equals(data))
+                        {
+                            return true;
+                        }
                     }
+
+                    if (blok.PreplnovaciBlok == -1)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        blok = new Block<T>(_zapisovac.citaj(blok.PreplnovaciBlok), _typ);
+                    }
+
                 }
-                return false;
             }
             else
             {
@@ -426,9 +438,21 @@ namespace audsSem2
             }
         }
 
-        public void Prever()
+        public List<Block<T>> Prever()
         {
-            var  a =_zapisovac.celySubor();
+            var a = _zapisovac.celySubor();
+            var typ = new Block<T>(PocetVBloku, -1, _typ);
+            var cislo = typ.GetSize();
+            var ret = new List<Block<T>>();
+            for (int i = 0; i < a.Length / cislo; i++)
+            {
+                var pole = new byte[cislo];
+                System.Buffer.BlockCopy(a, i * cislo, pole, 0, cislo);
+                var blok = new Block<T>(pole, _typ);
+                ret.Add(blok);
+            }
+
+            return ret;
         }
 
         public bool Add(T data)
@@ -439,7 +463,7 @@ namespace audsSem2
                 if (Root == null)
                 {
                     Root = NajdiExternalNode(data, ref b);
-                    ((ExternalNode) Root).PocetZaznamov++;
+                    ((ExternalNode)Root).PocetZaznamov++;
                     b.AddRecord(data);
                     _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
                     Console.WriteLine("Vlozil do roota prvy");
@@ -458,6 +482,48 @@ namespace audsSem2
                 }
                 else
                 {
+                    if (b.PreplnovaciBlok == -1)
+                    {
+                        var blok = new Block<T>(PocetVBloku, DajAdresu(), _typ);
+                        blok.AddRecord(data);
+                        b.PreplnovaciBlok = blok.SvojaAdresa;
+                        node.PocetZaznamov++;
+                        _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
+                        _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                        return true;
+                    }
+                    else
+                    {
+                        var blok = new Block<T>(_zapisovac.citaj(b.PreplnovaciBlok), _typ);
+                        while (true)
+                        {
+                            if (blok.PocetPlatnychRec < PocetVBloku)
+                            {
+                                blok.AddRecord(data);
+                                node.PocetZaznamov++;
+                                _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
+                                _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                return true;
+                            }
+
+                            
+                            if (blok.PreplnovaciBlok == -1)
+                            {
+                                Block<T> blok1 =  new Block<T>(PocetVBloku, DajAdresu(), _typ);
+                                blok.PreplnovaciBlok = blok1.SvojaAdresa;
+                                blok1.AddRecord(data);
+                                _zapisovac.zapis(blok.SvojaAdresa,blok.ToByteArrays());
+                                _zapisovac.zapis(blok1.SvojaAdresa, blok1.ToByteArrays());
+                                node.PocetZaznamov++;
+                                return true;
+                            }
+                            else
+                            {
+                                b = blok;
+                                blok = new Block<T>(_zapisovac.citaj(blok.PreplnovaciBlok), _typ); ;
+                            }
+                        }
+                    }
                     return false;
                 }
             }

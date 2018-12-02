@@ -61,5 +61,10 @@ namespace audsSem2
         {
             return new Record(data);
         }
+
+        public override string ToString()
+        {
+            return String.Format("{0,-10}", cislo) + text;
+        }
     }
 }

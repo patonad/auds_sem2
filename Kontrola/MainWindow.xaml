@@ -1,0 +1,21 @@
+﻿<Window x:Class="Kontrola.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kontrola"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ListView Name="DG" HorizontalAlignment="Left" Height="374" Margin="25,13,0,0" VerticalAlignment="Top" Width="735">
+            <!--<DataGrid.Columns>
+                <DataGridTextColumn Width="100" Header="Pletne zaznamy" Binding="{Binding Path=PocetPlatnychRec}"/>
+                <DataGridTextColumn Width="120" Header="Pocet zaznaomov" Binding="{Binding Path=PocetRec}"/>
+                <DataGridTextColumn Width="100" Header="Preplnovaci blok" Binding="{Binding Path=PreplnovaciBlok}"/>
+                <DataGridTextColumn Width="*" Header="Data" Binding="{Binding Path=PreplnovaciBlok}"/>
+            </DataGrid.Columns>-->
+            
+        </ListView>
+
+    </Grid>
+</Window>

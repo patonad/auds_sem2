@@ -1,0 +1,15 @@
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\MainWindow.g.cs
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\App.g.cs
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola_MarkupCompile.cache
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola_MarkupCompile.lref
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\bin\Debug\Kontrola.exe.config
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\bin\Debug\Kontrola.exe
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\bin\Debug\Kontrola.pdb
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\MainWindow.baml
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.g.resources
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.Properties.Resources.resources
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.csproj.GenerateResource.cache
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.csproj.CoreCompileInputs.cache
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.exe
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.pdb
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.csprojAssemblyReference.cache
