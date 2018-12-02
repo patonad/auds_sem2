@@ -74,7 +74,7 @@ namespace audsSem2
             byte[] c = new byte[GetSize()];
             byte[] prec = BitConverter.GetBytes(PocetRec);
             byte[] pprec = BitConverter.GetBytes(PocetPlatnychRec);
-            byte[] prepBlok = BitConverter.GetBytes(PocetPlatnychRec);
+            byte[] prepBlok = BitConverter.GetBytes(PreplnovaciBlok);
             byte[] adresa = BitConverter.GetBytes(SvojaAdresa);
             int a = 0;
             System.Buffer.BlockCopy(prec, 0, c, a, 4);

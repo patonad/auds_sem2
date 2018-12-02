@@ -40,13 +40,13 @@ namespace audsSem2
             //zap.zapis(1000, b1.ToByteArrays());
             //Block<Record> novyBlok = new Block<Record>(zap.citaj(0), new Record());
             //Block<Record> novyBlok1 = new Block<Record>(zap.citaj(1000), new Record());
-        
 
 
-            DymHas<Record> hash = new DymHas<Record>(2,2,new Record(),"pokus.bin");
-            hash.Add(new Record(4095, "4045"));
-            hash.Add(new Record(2047, "2047"));
-            hash.Add(new Record(8191, "cc015"));
+
+            DymHas<Record> hash = new DymHas<Record>(2, 2, new Record(), "pokus.bin");
+            //hash.Add(new Record(4095, "4045"));
+            //hash.Add(new Record(2047, "2047"));
+            //hash.Add(new Record(8191, "cc015"));
             //hash.Add(new Record(4, "dd04"));
             //hash.Add(new Record(5, "ee05"));
             //hash.Add(new Record(6, "ee06"));
@@ -54,6 +54,11 @@ namespace audsSem2
             //hash.Add(new Record(8, "ee08"));
             //hash.Add(new Record(9, "ee09"));
             //hash.Add(new Record(10, "ee10"));
+            for (int i = 1; i < 10000; i++)
+            {
+                hash.Add(new Record(i, i.ToString("0000")));
+            }
+
 
             //hash.Add(new Record(1, "aa01"));
             //hash.Add(new Record(2, "bb02"));

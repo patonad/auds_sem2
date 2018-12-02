@@ -17,9 +17,11 @@ namespace audsSem2
         public int PocetVBloku { get; set; }
         private T _typ;
         public List<int> volneBloky;
+        public int DlzkaHashu { get; set; }
 
         public DymHas(int pocetVBloku, int hlbka, T data, string adresaSuboru)
         {
+            DlzkaHashu = 4;
             volneBloky = new List<int>();
             _typ = data;
             _zapisovac = new Zapisovac<T>(adresaSuboru, new Block<T>(2, 0, data));
@@ -176,6 +178,7 @@ namespace audsSem2
                 {
                     node = ((InternalNode)node).Right;
                 }
+
             }
 
             return (ExternalNode)node;
@@ -337,7 +340,11 @@ namespace audsSem2
                             }
                         }
                         node = (ExternalNode)roo.Right;
-                        
+                        if (node.HlbkaBloku == DlzkaHashu)
+                        {
+                            return node;
+                        }
+
 
                     }
                 }
@@ -348,7 +355,7 @@ namespace audsSem2
 
         public ExternalNode NajdiExternalNode(T data, ref Block<T> blok)
         {
-            if (Root == null)
+           if (Root == null)
             {
                 blok = new Block<T>(PocetVBloku, DajAdresu(), _typ);
                 return new ExternalNode(0, blok.SvojaAdresa);
@@ -363,7 +370,14 @@ namespace audsSem2
                 else
                 {
                     blok = new Block<T>(_zapisovac.citaj(((ExternalNode)Root).Adresa), _typ);
-                    return Rozsir(ref blok, data, (ExternalNode)Root);
+                    if (Root.HlbkaBloku == DlzkaHashu)
+                    {
+                        return (ExternalNode)Root;
+                    }
+                    else
+                    {
+                        return Rozsir(ref blok, data, (ExternalNode)Root);
+                    }
                 }
 
             }
@@ -378,8 +392,15 @@ namespace audsSem2
                 else
                 {
                     blok = new Block<T>(_zapisovac.citaj(((ExternalNode)node).Adresa), _typ);
-                    node = Rozsir(ref blok, data, node);
-                    return node;
+                    if (node.HlbkaBloku == DlzkaHashu)
+                    {
+                        return (ExternalNode)node;
+                    }
+                    else
+                    {
+                        node = Rozsir(ref blok, data, node);
+                        return node;
+                    }
                 }
             }
         }
