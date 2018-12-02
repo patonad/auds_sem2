@@ -8,22 +8,18 @@ namespace audsSem2
 {
     class ExternalNode : Node
     {
-        public List<byte[]> pole;
-        public ExternalNode(int hlbka)
+      
+        public ExternalNode(int hlbka, int adresa)
         {
+            Adresa = adresa;
             base.HlbkaBloku = hlbka;
             PocetZaznamov = 0;
-            pole =new List<byte[]>();
-          
         }
 
         public int PocetZaznamov { get; set; }
         public int Adresa { get; set; }
-
-        public void Pridaj(byte[]p)
+        public void Pridaj()
         {
-            pole.Add(p);
-
             PocetZaznamov++;
         }
 

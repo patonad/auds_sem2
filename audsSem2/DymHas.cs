@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,154 +8,399 @@ using System.Windows.Forms;
 
 namespace audsSem2
 {
-    class DymHas
+    class DymHas<T> where T : IRecord<T>
     {
-        public DymHas(int pocet)
+
+        private Zapisovac<T> _zapisovac;
+        public int Adresa { get; set; }
+        public Node Root { get; set; }
+        public int PocetVBloku { get; set; }
+        private T _typ;
+        public List<int> volneBloky;
+
+        public DymHas(int pocetVBloku, int hlbka, T data, string adresaSuboru)
         {
-            PocetVBloku = pocet;
+            volneBloky = new List<int>();
+            _typ = data;
+            _zapisovac = new Zapisovac<T>(adresaSuboru, new Block<T>(2, 0, data));
+            PocetVBloku = pocetVBloku;
             Adresa = 0;
         }
-
         public int AkyBit(int pozicia, byte[] pole)
         {
             return (pole[pozicia / 8] & (1 << pozicia % 8)) != 0 ? 1 : 0;
         }
 
-        public int Adresa { get; set; }
-        public Node Root { get; set; }
 
-        public int PocetVBloku { get; set; }
-        public int Add(byte[] pole)
+        //public bool add(T data)
+        //{
+        //    // ak je root prazdny
+        //    if (Root == null)
+        //    {
+        //        Root = new ExternalNode(0, Adresa);
+        //        ((ExternalNode) Root).PocetZaznamov++;
+        //        Adresa++;
+        //        Block<T> blok = new Block<T>(PocetVBlokuVBloku, _typ);
+        //        blok.AddRecord(data);
+        //        _zapisovac.zapis(0, blok.ToByteArrays());
+        //        Console.WriteLine("Vlozil do roota prvy");
+        //        return true;
+        //    }
+        //    // ak root nieje prazdny
+        //    if (Root is ExternalNode)
+        //    {
+        //        // ak vojde
+        //        if (((ExternalNode) Root).PocetZaznamov < PocetVBlokuVBloku)
+        //        {
+        //            Block<T> blok = new Block<T>(_zapisovac.citaj(((ExternalNode) Root).Adresa), _typ);
+        //            blok.AddRecord(data);
+        //            _zapisovac.zapis(0, blok.ToByteArrays());
+        //            ((ExternalNode) Root).PocetZaznamov++;
+        //            Console.WriteLine("Vlozil do roota dalsi");
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            var node = NajdiExternalNode(data,Root);
+        //            Block<T> Lblok = null;
+        //            Block<T> Rblok = null;
+        //            while (true)
+        //            {
+        //                Console.WriteLine("Rozsirujem sa");
+        //                var inter = new InternalNode(node.HlbkaBloku);
+        //                Block<T> Sblok = new Block<T>(_zapisovac.citaj(((ExternalNode)node).Adresa), _typ);
+        //                foreach (var zaznam in Sblok.Records)
+        //                {
+        //                    if (AkyBit(node.HlbkaBloku, zaznam.GetHash()) == 0)
+        //                    {
+        //                        if (Lblok == null)
+        //                        {
+        //                            Lblok = new Block<T>(PocetVBlokuVBloku, _typ);
+        //                            if (inter.Right == null)
+        //                            {
+        //                                inter.Left = new ExternalNode(node.HlbkaBloku + 1, ((ExternalNode)node).Adresa);
+        //                            }
+        //                            else
+        //                            {
+        //                                inter.Left = new ExternalNode(node.HlbkaBloku + 1, Adresa);
+        //                                Adresa++;
+        //                            }
+        //                        }
+        //                        Lblok.AddRecord(zaznam);
+        //                        ((ExternalNode)inter.Left).PocetZaznamov++;
+        //                        Console.WriteLine("Prehadzujem lavy");
+        //                    }
+        //                    else
+        //                    {
+        //                        if (Rblok == null)
+        //                        {
+        //                            Rblok = new Block<T>(PocetVBlokuVBloku, _typ);
+        //                            if (inter.Left == null)
+        //                            {
+        //                                inter.Right = new ExternalNode(node.HlbkaBloku + 1, ((ExternalNode)node).Adresa);
+        //                            }
+        //                            else
+        //                            {
+        //                                inter.Right = new ExternalNode(node.HlbkaBloku + 1, Adresa);
+        //                                Adresa++;
+        //                            }
+
+        //                        }
+
+        //                        Rblok.AddRecord(zaznam);
+        //                        ((ExternalNode)inter.Right).PocetZaznamov++;
+        //                        Console.WriteLine("Prehadzujem pravy");
+        //                    }
+        //                }
+
+        //                if (Root == node)
+        //                {
+        //                    Root = inter;
+        //                }
+        //                else
+        //                {
+        //                    if (((InternalNode)node).Left == node)
+        //                    {
+        //                        ((InternalNode)poNode).Left = inter;
+        //                        node = inter;
+        //                    }
+        //                    else
+        //                    {
+        //                        ((InternalNode)poNode).Right = inter;
+        //                        node = inter;
+        //                    }
+
+        //                }
+
+
+
+
+
+        //                //if ((ExternalNode)inter.Left != null)
+        //                //    _zapisovac.zapis(((ExternalNode)inter.Left).Adresa, Lblok.ToByteArrays());
+        //                //if ((ExternalNode)inter.Right != null)
+        //                //    _zapisovac.zapis(((ExternalNode)inter.Right).Adresa, Rblok.ToByteArrays());
+        //            }
+        //    }
+        //    return true;
+        //}
+        public void PridajVolnuAdresu(int data)
         {
+            volneBloky.Add(data);
+        }
+        public int DajAdresu()
+        {
+            if (volneBloky.Count() == 0)
+            {
+                Adresa++;
+                return Adresa - 1;
+            }
+            else
+            {
+                int a = volneBloky.Min();
+                volneBloky.Remove(a);
+                return a;
+            }
+        }
 
+        public ExternalNode najdiNode(T data)
+        {
+            var node = Root;
+            while (node is InternalNode)
+            {
+                if (AkyBit(node.HlbkaBloku, data.GetHash()) == 0)
+                {
+                    node = ((InternalNode)node).Left;
+                }
+                else
+                {
+                    node = ((InternalNode)node).Right;
+                }
+            }
+
+            return (ExternalNode)node;
+        }
+
+        public ExternalNode Rozsir(ref Block<T> blok, T data, ExternalNode node)
+        {
+            var pomNode = node;
+            while (true)
+            {
+                Block<T> blok1 = new Block<T>(PocetVBloku, -1, _typ);
+                Block<T> blok2 = new Block<T>(PocetVBloku, -1, _typ);
+                foreach (var blokRecord in blok.Records)
+                {
+                    if (AkyBit(node.HlbkaBloku, blokRecord.GetHash()) == 0)
+                    {
+                        blok1.AddRecord(blokRecord);
+                    }
+                    else
+                    {
+                        blok2.AddRecord(blokRecord);
+                    }
+                }
+                InternalNode roo = new InternalNode(node.HlbkaBloku);
+                if (blok1.PocetPlatnychRec > 0)
+                {
+                    if (roo.Right == null)
+                    {
+                        roo.Left = new ExternalNode(roo.HlbkaBloku + 1, ((ExternalNode)node).Adresa);
+                        roo.Left.Parent = roo;
+                    }
+                    else
+                    {
+                        roo.Left = new ExternalNode(roo.HlbkaBloku + 1, DajAdresu());
+                        roo.Left.Parent = roo;
+                    }
+
+                    ((ExternalNode)roo.Left).PocetZaznamov = blok1.PocetPlatnychRec;
+                    blok1.SvojaAdresa = ((ExternalNode)roo.Left).Adresa;
+                }
+                if (blok2.PocetPlatnychRec > 0)
+                {
+                    if (roo.Left == null)
+                    {
+                        roo.Right = new ExternalNode(roo.HlbkaBloku + 1, ((ExternalNode)node).Adresa);
+                        roo.Right.Parent = roo;
+                    }
+                    else
+                    {
+                        roo.Right = new ExternalNode(roo.HlbkaBloku + 1, DajAdresu());
+                        roo.Right.Parent = roo;
+                    }
+                    ((ExternalNode)roo.Right).PocetZaznamov = blok2.PocetPlatnychRec;
+                    blok2.SvojaAdresa = ((ExternalNode)roo.Right).Adresa;
+                }
+                if (AkyBit(node.HlbkaBloku, data.GetHash()) == 0)
+                {
+                    if (blok1.PocetPlatnychRec < PocetVBloku)
+                    {
+                        if (blok2.SvojaAdresa != -1)
+                        {
+                            _zapisovac.zapis(blok2.SvojaAdresa, blok2.ToByteArrays());
+                        }
+
+                        blok = blok1;
+                        if (node == Root)
+                        {
+                            Root = roo;
+                        }
+                        else
+                        {
+                            if (((InternalNode)node.Parent).Left == node)
+                            {
+                                roo.Parent = node.Parent;
+                                ((InternalNode)node.Parent).Left = roo;
+                            }
+                            else
+                            {
+                                roo.Parent = node.Parent;
+                                ((InternalNode)node.Parent).Right = roo;
+                            }
+                        }
+                        return (ExternalNode)roo.Left;
+
+                    }
+                    else
+                    {
+                        blok = blok1;
+                        if (node == Root)
+                        {
+                            Root = roo;
+                        }
+                        else
+                        {
+                            if (((InternalNode)node.Parent).Left == node)
+                            {
+                                roo.Parent = node.Parent;
+                                ((InternalNode)node.Parent).Left = roo;
+                            }
+                            else
+                            {
+                                roo.Parent = node.Parent;
+                                ((InternalNode)node.Parent).Right = roo;
+                            }
+                        }
+
+                        node = (ExternalNode)roo.Left;
+
+                    }
+                }
+                else
+                {
+                    if (blok2.PocetPlatnychRec < PocetVBloku)
+                    {
+                        if (blok1.SvojaAdresa != -1)
+                        {
+                            _zapisovac.zapis(blok1.SvojaAdresa, blok1.ToByteArrays());
+                        }
+
+                        blok = blok2;
+                        if (node == Root)
+                        {
+                            Root = roo;
+                        }
+                        else
+                        {
+                            if (((InternalNode)node.Parent).Left == node)
+                            {
+                                roo.Parent = node.Parent;
+                                ((InternalNode)node.Parent).Left = roo;
+                            }
+                            else
+                            {
+                                roo.Parent = node.Parent;
+                                ((InternalNode)node.Parent).Right = roo;
+                            }
+                        }
+                        return (ExternalNode)roo.Right;
+                    }
+                    else
+                    {
+                        blok = blok2;
+                        blok = blok2;
+                        if (node == Root)
+                        {
+                            Root = roo;
+                        }
+                        else
+                        {
+                            if (((InternalNode)node.Parent).Left == node)
+                            {
+                                roo.Parent = node.Parent;
+                                ((InternalNode)node.Parent).Left = roo;
+                            }
+                            else
+                            {
+                                roo.Parent = node.Parent;
+                                ((InternalNode)node.Parent).Right = roo;
+                            }
+                        }
+                        node = (ExternalNode)roo.Right;
+                        
+
+                    }
+                }
+
+            }
+
+        }
+
+        public ExternalNode NajdiExternalNode(T data, ref Block<T> blok)
+        {
             if (Root == null)
             {
-                Root = new ExternalNode(0);
-                ((ExternalNode)Root).Pridaj(pole);
-                Console.WriteLine("Vlozil do roota prvy");
-                return Adresa;
+                blok = new Block<T>(PocetVBloku, DajAdresu(), _typ);
+                return new ExternalNode(0, blok.SvojaAdresa);
             }
             if (Root is ExternalNode)
             {
                 if (((ExternalNode)Root).PocetZaznamov < PocetVBloku)
                 {
-                    ((ExternalNode)Root).Pridaj(pole);
-                    Console.WriteLine("Vlozil do roota dalsi");
-                    return Adresa;
+                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode)Root).Adresa), _typ);
+                    return (ExternalNode)Root;
                 }
                 else
                 {
-                    Console.WriteLine("Rozsirujem sa");
-                    var inter = new InternalNode(Root.HlbkaBloku);
-                    foreach (var zaznam in ((ExternalNode)Root).pole)
-                    {
-                        if (AkyBit(Root.HlbkaBloku, zaznam) == 0)
-                        {
-                            if (inter.Left == null)
-                            {
-                                inter.Left = new ExternalNode(Root.HlbkaBloku + 1);
-                            }
-                            ((ExternalNode)((InternalNode)inter).Left).Pridaj(zaznam);
-                            Console.WriteLine("Prehadzujem lavy");
-                        }
-                        else
-                        {
-                            if (inter.Right == null)
-                            {
-                                inter.Right = new ExternalNode(Root.HlbkaBloku + 1);
-                            }
-                            ((ExternalNode)((InternalNode)inter).Right).Pridaj(zaznam);
-                            Console.WriteLine("Prehadzujem pravy");
-                        }
-                    }
-
-                    Root = inter;
+                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode)Root).Adresa), _typ);
+                    return Rozsir(ref blok, data, (ExternalNode)Root);
                 }
+
             }
-            var node = Root;
-            var poNode = node;
-            while (node is InternalNode)
+            else
             {
-                //traverzuje po externy
-                if (AkyBit(node.HlbkaBloku, pole) == 0)//tuto
+                var node = najdiNode(data);
+                if (node.PocetZaznamov < PocetVBloku)
                 {
-                    if (((InternalNode)node).Left != null)
-                    {
-                        poNode = node;
-                        node = ((InternalNode) node).Left;
-                    }
-                    else
-                    {
-                        ((InternalNode)node).Left = new ExternalNode(node.HlbkaBloku);
-                        Console.WriteLine("Vytvaram lavy");
-                    }
+                    blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ);
+                    return node;
                 }
                 else
                 {
-                    if (((InternalNode)node).Right != null)
-                    {
-                        poNode = node;
-                        node = ((InternalNode)node).Right;
-                    }
-                    else
-                    {
-                        ((InternalNode)node).Right = new ExternalNode(node.HlbkaBloku);
-                        Console.WriteLine("Vytvaram pravy");
-                    }
+                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode)node).Adresa), _typ);
+                    node = Rozsir(ref blok, data, node);
+                    return node;
                 }
-                //pridava
-                if (node is ExternalNode)
-                {
-                    if (((ExternalNode)node).PocetZaznamov < PocetVBloku)
-                    {
-                        ((ExternalNode)node).Pridaj(pole);
-                        Console.WriteLine("Vlozil do ex dalsi");
-                        return Adresa;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Rozsirujem sa");
-                       
-
-                        var inter = new InternalNode(node.HlbkaBloku);
-                        foreach (var zaznam in ((ExternalNode)node).pole)
-                        {
-                            if (AkyBit(node.HlbkaBloku, zaznam) == 0)
-                            {
-                                if (inter.Left == null)
-                                {
-                                    inter.Left = new ExternalNode(node.HlbkaBloku + 1);
-                                }
-                                ((ExternalNode)((InternalNode)inter).Left).Pridaj(zaznam);
-                                Console.WriteLine("Prehadzujem lavy");
-                            }
-                            else
-                            {
-                                if (inter.Right == null)
-                                {
-                                    inter.Right = new ExternalNode(node.HlbkaBloku + 1);
-                                }
-                                ((ExternalNode)((InternalNode)inter).Right).Pridaj(zaznam);
-                                Console.WriteLine("Prehadzujem pravy");
-                            }
-                        }
-
-                        if (((InternalNode)poNode).Left == node)
-                        {
-                            ((InternalNode) poNode).Left = inter;
-                            node = inter;
-                        }
-                        else{
-                            ((InternalNode)poNode).Right = inter;
-                            node = inter;
-                        }
-                    }
-                }
-
-
             }
-
-            return 1;
+        }
+        public bool Add(T data)
+        {
+            Block<T> b = null;
+            if (Root == null)
+            {
+                Root = NajdiExternalNode(data, ref b);
+                ((ExternalNode)Root).PocetZaznamov++;
+                b.AddRecord(data);
+                _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
+                Console.WriteLine("Vlozil do roota prvy");
+                return true;
+            }
+            var node = NajdiExternalNode(data, ref b);
+            node.PocetZaznamov++;
+            b.AddRecord(data);
+            _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
+            Console.WriteLine("Vlozil cez roota");
+            return true;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,23 +11,14 @@ namespace audsSem2
 {
     class Zapisovac<T>where T : IRecord<T>
     {
-        public Zapisovac(string nazovSuboru,Block<T> data)
+        public Zapisovac(string nazovSuboru, Block<T> data)
         {
             Typ = data;
             NazovSuboru = nazovSuboru;
-        }
-
-        public void OtvorCitanie()
-        {
-            _reader = new BinaryReader(File.OpenRead(NazovSuboru));
-        }
-        public void OtvorZapis()
-        {
-            _writer = new BinaryWriter(File.OpenWrite(NazovSuboru));
-        }
-        public void ZatvorCitanie()
-        {
-            _reader.Close();
+            FileStream fs = new FileStream(nazovSuboru, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                FileShare.None);
+            _reader = new BinaryReader(fs);
+            _writer = new BinaryWriter(fs);
         }
         public void ZatvorZapis()
         {
@@ -41,6 +33,7 @@ namespace audsSem2
         public void zapis(int CisloBloku, byte[] pole){
             _writer.Seek(CisloBloku * pole.Length, SeekOrigin.Begin);
             _writer.Write(pole);
+            _writer.Flush();
         }
         public byte[] citaj(int CisloBloku)
         {
@@ -48,6 +41,7 @@ namespace audsSem2
             byte[] pole = new Byte[Typ.GetSize()] ;
             _reader.BaseStream.Seek(CisloBloku * pole.Length, SeekOrigin.Begin);
             return pole = _reader.ReadBytes(Typ.GetSize());
+            
 
         }
 

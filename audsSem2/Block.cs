@@ -12,9 +12,11 @@ namespace audsSem2
         public int PocetRec { get; set; }
         public int PocetPlatnychRec { get; set; }
         public int  PreplnovaciBlok { get; set; }
+        public int SvojaAdresa { get; set; }
         public T Typ { get; set; }
-        public Block( int pocetRec,T data)
+        public Block( int pocetRec,int adresa, T data)
         {
+            SvojaAdresa = adresa;
             PreplnovaciBlok = -1;
             Typ = data;
             PocetRec = pocetRec;
@@ -32,8 +34,9 @@ namespace audsSem2
             this.PocetRec = BitConverter.ToInt32(pole, 0);
             this.PocetPlatnychRec = BitConverter.ToInt32(pole, 4);
             this.PreplnovaciBlok = BitConverter.ToInt32(pole, 8);
+            this.SvojaAdresa = BitConverter.ToInt32(pole, 12);
             Records = new T[PocetRec];
-            int a = 12;
+            int a = 16;
             for (int i = 0; i < PocetRec; i++)
             {
                 var b = pole.Skip(a).ToArray();
@@ -43,6 +46,12 @@ namespace audsSem2
             }
 
         }
+
+        public bool Vojde()
+        {
+            return PocetRec < PocetPlatnychRec;
+        }
+
         public int GetSize()
         {
             int a = 0;
@@ -50,7 +59,7 @@ namespace audsSem2
             {
                 a += record.GetSize();
             }
-            return a + 12 ;
+            return a + 16 ;
         }
 
         public void AddRecord(T data)
@@ -66,12 +75,15 @@ namespace audsSem2
             byte[] prec = BitConverter.GetBytes(PocetRec);
             byte[] pprec = BitConverter.GetBytes(PocetPlatnychRec);
             byte[] prepBlok = BitConverter.GetBytes(PocetPlatnychRec);
+            byte[] adresa = BitConverter.GetBytes(SvojaAdresa);
             int a = 0;
             System.Buffer.BlockCopy(prec, 0, c, a, 4);
             a += 4;
             System.Buffer.BlockCopy(pprec, 0, c, a, 4);
             a += 4;
             System.Buffer.BlockCopy(prepBlok, 0, c, a, 4);
+            a += 4;
+            System.Buffer.BlockCopy(adresa, 0, c, a, 4);
             a += 4;
             foreach (var record in Records)
             {
