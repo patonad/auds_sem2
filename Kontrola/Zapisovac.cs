@@ -30,6 +30,24 @@ namespace audsSem2
         private BinaryReader _reader;
         private BinaryWriter _writer;
 
+        public void skrat()
+        {
+            _reader.Close();
+            _writer.Close();
+            FileStream fs = new FileStream(NazovSuboru, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                FileShare.Read);
+            {
+                fs.SetLength(Math.Max(0, fs.Length - Typ.GetSize()));
+               
+                fs.Flush();
+                fs.Close();
+            }
+            fs = new FileStream(NazovSuboru, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                FileShare.Read);
+            _reader = new BinaryReader(fs);
+            _writer = new BinaryWriter(fs);
+        }
+
         public void zapis(int CisloBloku, byte[] pole){
             _writer.Seek(CisloBloku * pole.Length, SeekOrigin.Begin);
             _writer.Write(pole);

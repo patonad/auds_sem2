@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kontrola"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="536.591" Width="800">
     <Grid>
         <ListView Name="DG" HorizontalAlignment="Left" Height="374" Margin="25,13,0,0" VerticalAlignment="Top" Width="735">
             <!--<DataGrid.Columns>
@@ -16,6 +16,9 @@
             </DataGrid.Columns>-->
             
         </ListView>
+        <TextBox Name="Koho"  HorizontalAlignment="Left" Height="23" Margin="157,422,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Pridaj" HorizontalAlignment="Left" Margin="287,423,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Zmas" HorizontalAlignment="Left" Margin="376,424,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
 
     </Grid>
 </Window>

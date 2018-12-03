@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace audsSem2
 {
-
-    class Record:IRecord<Record>
+    public class Record:IRecord<Record>
     {
         public Record(int cislo, string text)
         {
@@ -17,7 +16,7 @@ namespace audsSem2
         }
         public Record()
         {
-            this.cislo = 0;
+            this.cislo = -1;
             this.text = "Kopi";
         }
         public Record(byte[] pole)

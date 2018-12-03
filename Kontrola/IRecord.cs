@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace audsSem2
 {
-    interface IRecord<T>
+    public interface IRecord<T>
     {
         byte[] GetHash();
         bool Equals(T rec);

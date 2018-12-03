@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace audsSem2
 {
-    class Node
+    public class Node
     {
         public Node Parent { get; set; }
         public int HlbkaBloku{ get; set; }

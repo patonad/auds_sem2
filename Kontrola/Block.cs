@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace audsSem2
 {
-    class Block<T> where T : IRecord<T>
+    public class Block<T> where T : IRecord<T>
     {
         public T[] Records { get; set; }
         public int PocetRec { get; set; }
@@ -45,6 +45,14 @@ namespace audsSem2
                 a += data.GetSize();
             }
 
+        }
+
+        public void Swap(int index)
+        {
+            T pom = Records[index];
+            Records[index] = Records[PocetPlatnychRec - 1];
+            Records[PocetPlatnychRec - 1] = Typ;
+            PocetPlatnychRec--;
         }
 
         public bool Vojde()

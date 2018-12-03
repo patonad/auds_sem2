@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace audsSem2
 {
-    class ExternalNode : Node
+    public class ExternalNode : Node
     {
       
         public ExternalNode(int hlbka, int adresa)
