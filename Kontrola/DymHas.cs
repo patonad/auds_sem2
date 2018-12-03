@@ -27,7 +27,7 @@ namespace audsSem2
             DlzkaHashu = hlbka;
             volneBloky = new List<int>();
             _typ = data;
-            _zapisovac = new Zapisovac<T>(adresaSuboru, new Block<T>(2, 0, data));
+            _zapisovac = new Zapisovac<T>(adresaSuboru, new Block<T>(pocetVBloku, 0, data));
             PocetVBloku = pocetVBloku;
             Adresa = 0;
         }
@@ -601,6 +601,11 @@ namespace audsSem2
             }
 
             return ret;
+        }
+
+        public void zatvor()
+        {
+          
         }
 
         public void Delete(T data)
