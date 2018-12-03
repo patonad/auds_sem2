@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
@@ -154,7 +155,7 @@ namespace audsSem2
         }
         public int DajAdresu()
         {
-            if (volneBloky.Count() == 0)
+            if (volneBloky.Count == 0)
             {
                 Adresa++;
 
@@ -187,15 +188,34 @@ namespace audsSem2
             return (ExternalNode)node;
         }
 
-        public void skratPole(int adresa)
+        public bool skratPole(int adresa)
         {
-            if (Adresa - 1 == adresa)
-                _zapisovac.skrat();
-            while (volneBloky.Max() == adresa - 1)
+            bool ret = false;
+            //if (Adresa - 1 == adresa)
+            //{
+            //    _zapisovac.skrat();
+            //    Adresa--;
+            //    volneBloky.Remove(adresa);
+            //    ret = true;
+
+            //}
+
+            if (volneBloky.Count != 0)
             {
-                _zapisovac.skrat();
-                volneBloky.Remove(volneBloky.Max());
+                while (volneBloky.Max() == Adresa - 1)
+                {
+                    _zapisovac.skrat();
+                    volneBloky.Remove(volneBloky.Max());
+                    Adresa--;
+                    ret = true;
+                    if (volneBloky.Count == 0)
+                    {
+                        return ret;
+                    }
+                }
             }
+
+            return ret;
         }
 
         public ExternalNode Rozsir(ref Block<T> blok, T data, ExternalNode node)
@@ -455,6 +475,11 @@ namespace audsSem2
             if (Root != null)
             {
                 var node = najdiNode(data);
+                if (node.Adresa == -1)
+                {
+                    return null;
+                }
+
                 blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ);
                 while (true)
                 {
@@ -595,111 +620,239 @@ namespace audsSem2
                 }
                 blok.Swap(index);
                 node.PocetZaznamov--;
-                _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays()); // bacha
-
-
-                if ((InternalNode)node.Parent != null)
+                if (node == Root)
                 {
-                    if (((InternalNode)node.Parent).Right == node)
-                    {// pravy syn
-                        if (((InternalNode)node.Parent).Left is ExternalNode)
-                        {
-                            if (((ExternalNode)((InternalNode)node.Parent).Left).PocetZaznamov + node.PocetZaznamov <= PocetVBloku)
-                            {
-                                Block<T> blok1 = new Block<T>(_zapisovac.citaj(((ExternalNode)((InternalNode)node.Parent).Left).Adresa), _typ);
-                                if (blok.SvojaAdresa < blok1.SvojaAdresa)
-                                {
-                                    for (int i = 0; i < blok1.PocetPlatnychRec; i++)
-                                    {
-                                        blok.AddRecord(blok1.Records[i]);
-                                    }
-
-                                    blok1.PocetPlatnychRec = 0;
-                                    PridajVolnuAdresu(blok1.SvojaAdresa);
-                                    _zapisovac.zapis(blok1.SvojaAdresa, blok1.ToByteArrays());
-                                    skratPole(blok1.SvojaAdresa);
-                                }
-                                else
-                                {
-                                    for (int i = 0; i < blok.PocetPlatnychRec; i++)
-                                    {
-                                        blok1.AddRecord(blok.Records[i]);
-                                    }
-                                    blok.PocetPlatnychRec = 0;
-                                    _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
-                                    PridajVolnuAdresu(blok.SvojaAdresa);
-                                    skratPole(blok.SvojaAdresa);
-                                    blok = blok1;
-                                }
-                                node.Adresa = blok.SvojaAdresa;
-                            }
-                            else
-                            {
-                                return;
-                            }
-
-                        }
-                        //else
-                        //{
-                        //    return;
-                        //}
-
-
-                    } // spojenie nodu
-                    else
-                    {//lavy syn
-                        if (((ExternalNode)((InternalNode)node.Parent).Right is ExternalNode))
-                        {
-                            if (((ExternalNode)((InternalNode)node.Parent).Right).PocetZaznamov + node.PocetZaznamov <= PocetVBloku)
-                            {
-                                Block<T> blok1 = new Block<T>(_zapisovac.citaj(((ExternalNode)((InternalNode)node.Parent).Right).Adresa), _typ);
-                                if (blok.SvojaAdresa < blok1.SvojaAdresa)
-                                {
-                                    for (int i = 0; i < blok1.PocetPlatnychRec; i++)
-                                    {
-                                        blok.AddRecord(blok1.Records[i]);
-                                    }
-
-                                    blok1.PocetPlatnychRec = 0;
-                                    PridajVolnuAdresu(blok1.SvojaAdresa);
-                                    skratPole(blok1.SvojaAdresa);
-                                    _zapisovac.zapis(blok1.SvojaAdresa, blok1.ToByteArrays());
-                                }
-                                else
-                                {
-                                    for (int i = 0; i < blok.PocetPlatnychRec; i++)
-                                    {
-                                        blok1.AddRecord(blok.Records[i]);
-                                    }
-                                    blok.PocetPlatnychRec = 0;
-                                    PridajVolnuAdresu(blok.SvojaAdresa);
-                                    skratPole(blok.SvojaAdresa);
-                                    _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
-                                    blok = blok1;
-                                }
-                                node.Adresa = blok.SvojaAdresa;
-                            }
-                            else
-                            {
-                                return;
-                            }
-
-                        }
-                        //else
-                        //{
-                        //    return;
-                        //}
-                    }
-                    if ((InternalNode)node.Parent.Parent == null)
+                    if (node.PocetZaznamov == 0)
                     {
-                        Root = node;
-                        node.HlbkaBloku = 0;
-                        node.Parent = null;
+                        PridajVolnuAdresu(node.Adresa);
+                        skratPole(node.Adresa);
+                        Root = null;
+                        return;
+                    }
+                    else
+                    {
                         _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
-                        node.PocetZaznamov = blok.PocetPlatnychRec;
+                        return;
+                    }
+                }
+
+                InternalNode par = (InternalNode)node.Parent;
+                // ci som lavz alebo pravy
+                while (true)
+                {
+                    if (par.Right == node)
+                    {
+                        if (par.Left is InternalNode)
+                        {
+                            _zapisovac.zapis(blok.SvojaAdresa,blok.ToByteArrays());
+                            return;
+                        }
+                        if(((ExternalNode)par.Left).Adresa ==- 1)
+                        {
+                            if (par.Parent == null)
+                            {
+                                Root = node;
+                                node.Parent = null;
+                                node.HlbkaBloku--;
+                                _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                node.Adresa = blok.SvojaAdresa;
+                                node.PocetZaznamov = blok.PocetPlatnychRec;
+                                return;
+                            }
+                            if (((InternalNode)par.Parent).Left == par)
+                            {
+                                node.HlbkaBloku = par.HlbkaBloku;
+                                ((InternalNode)par.Parent).Left = node;
+                                par = (InternalNode)par.Parent;
+                                node.Parent = par;
+                            }
+                            else
+                            {
+                                node.HlbkaBloku = par.HlbkaBloku;
+                                ((InternalNode)par.Parent).Right = node;
+                                par = (InternalNode)par.Parent;
+                                node.Parent = par;
+                            }
+                        }
+                        else
+                        {
+                            if ((par.Left as ExternalNode).PocetZaznamov + node.PocetZaznamov <= PocetVBloku)
+                            {
+                                Block<T> blok1 = new Block<T>(_zapisovac.citaj((par.Left as ExternalNode).Adresa), _typ);// nacital som bloky aj nevalidne
+                                if (blok.SvojaAdresa < blok1.SvojaAdresa)
+                                {
+                                    for (int i = 0; i < blok1.PocetPlatnychRec; i++)
+                                    {
+                                        blok.AddRecord(blok1.Records[i]);
+                                    }
+
+                                    blok1.PocetPlatnychRec = 0;
+                                    PridajVolnuAdresu(blok1.SvojaAdresa);
+                                    if (!skratPole(blok1.SvojaAdresa))
+                                    {
+                                        _zapisovac.zapis(blok1.SvojaAdresa, blok1.ToByteArrays());
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < blok.PocetPlatnychRec; i++)
+                                    {
+                                        blok1.AddRecord(blok.Records[i]);
+                                    }
+                                    blok.PocetPlatnychRec = 0;
+                                    PridajVolnuAdresu(blok.SvojaAdresa);
+                                    if (!skratPole(blok.SvojaAdresa))
+                                    {
+                                        _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                    }
+                                    blok = blok1;
+                                }
+                                if (par.Parent == null)
+                                {
+                                    Root = node;
+                                    node.Parent = null;
+                                    node.HlbkaBloku--;
+                                    _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                    node.Adresa = blok.SvojaAdresa;
+                                    node.PocetZaznamov = blok.PocetPlatnychRec;
+                                    return;
+                                    
+                                }
+                                if (((InternalNode)par.Parent).Left == par)
+                                {
+                                    node.HlbkaBloku = par.HlbkaBloku;
+                                    ((InternalNode)par.Parent).Left = node;
+                                    par = (InternalNode)par.Parent;
+                                    node.Parent = par;
+                                    node.PocetZaznamov = blok.PocetPlatnychRec;
+                                    node.Adresa = blok.SvojaAdresa;
+                                }
+                                else
+                                {
+                                    node.HlbkaBloku = par.HlbkaBloku;
+                                    ((InternalNode)par.Parent).Right = node;
+                                    par = (InternalNode)par.Parent;
+                                    node.Parent = par;
+                                    node.PocetZaznamov = blok.PocetPlatnychRec;
+                                    node.Adresa = blok.SvojaAdresa;
+                                }
+                            }
+                            else
+                            {
+                                _zapisovac.zapis(blok.SvojaAdresa,blok.ToByteArrays());
+                                return;
+                            }
+                        }
                     }
                     else
                     {
+                        if (par.Right is InternalNode)
+                        {
+                            _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                            return;
+                        }
+                        if (((ExternalNode)par.Right).Adresa == -1)
+                        {
+                            if (par.Parent == null)
+                            {
+                                Root = node;
+                                node.HlbkaBloku--;
+                                node.Parent = null;
+                                _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                node.Adresa = blok.SvojaAdresa;
+                                node.PocetZaznamov = blok.PocetPlatnychRec;
+                                return;
+                            }
+                            if (((InternalNode)par.Parent).Left == par)
+                            {
+                                node.HlbkaBloku = par.HlbkaBloku;
+                                ((InternalNode)par.Parent).Left = node;
+                                par = (InternalNode)par.Parent;
+                                node.Parent = par;
+                                node.PocetZaznamov = blok.PocetPlatnychRec;
+                                node.Adresa = blok.SvojaAdresa;
+                            }
+                            else
+                            {
+                                node.HlbkaBloku = par.HlbkaBloku;
+                                ((InternalNode)par.Parent).Right = node;
+                                par = (InternalNode)par.Parent;
+                                node.Parent = par;
+                                node.PocetZaznamov = blok.PocetPlatnychRec;
+                                node.Adresa = blok.SvojaAdresa;
+                            }
+                        }
+                        else
+                        {
+                            if ((par.Right as ExternalNode).PocetZaznamov + node.PocetZaznamov <= PocetVBloku)
+                            {
+                                Block<T> blok1 = new Block<T>(_zapisovac.citaj((par.Right as ExternalNode).Adresa),_typ );// nacital som bloky aj nevalidne
+
+                                if (blok.SvojaAdresa < blok1.SvojaAdresa)
+                                {
+                                    for (int i = 0; i < blok1.PocetPlatnychRec; i++)
+                                    {
+                                        blok.AddRecord(blok1.Records[i]);
+                                    }
+                                    PridajVolnuAdresu(blok1.SvojaAdresa);
+                                    blok1.PocetPlatnychRec = 0;
+                                    if (!skratPole(blok1.SvojaAdresa))
+                                    {
+                                        
+                                        _zapisovac.zapis(blok1.SvojaAdresa, blok1.ToByteArrays());
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < blok.PocetPlatnychRec; i++)
+                                    {
+                                        blok1.AddRecord(blok.Records[i]);
+                                    }
+                                    blok.PocetPlatnychRec = 0;
+                                    PridajVolnuAdresu(blok.SvojaAdresa);
+                                    if (!skratPole(blok.SvojaAdresa))
+                                    {
+                                        
+                                        _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                    }
+
+                                    blok = blok1;
+                                }
+                                if (par.Parent == null)
+                                {
+                                    Root = node;
+                                    node.Parent = null;
+                                    node.HlbkaBloku--;
+                                    _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                    node.PocetZaznamov = blok.PocetPlatnychRec; ;
+                                    node.Adresa = blok.SvojaAdresa;
+                                    return;
+                                }
+                                if (((InternalNode)par.Parent).Left == par)
+                                {
+                                    node.HlbkaBloku = par.HlbkaBloku;
+                                    ((InternalNode)par.Parent).Left = node;
+                                    par = (InternalNode)par.Parent;
+                                    node.Parent = par;
+                                    node.PocetZaznamov = blok.PocetPlatnychRec;
+                                    node.Adresa = blok.SvojaAdresa;
+                                }
+                                else
+                                {
+                                    node.HlbkaBloku = par.HlbkaBloku;
+                                    ((InternalNode)par.Parent).Right = node;
+                                    par = (InternalNode)par.Parent;
+                                    node.Parent = par;
+                                    node.PocetZaznamov = blok.PocetPlatnychRec;
+                                    node.Adresa = blok.SvojaAdresa;
+                                }
+                            }
+                            else
+                            {
+                                _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                return;
+                            }
+                        }
                     }
                 }
             }
