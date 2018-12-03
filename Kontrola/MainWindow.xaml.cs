@@ -35,15 +35,16 @@ namespace Kontrola
             hash.Add(new Record(2, "ee05"));
             hash.Add(new Record(10, "ee06"));
             hash.Add(new Record(6, "ee07"));
-            hash.Add(new Record(15, "ee08"));
-            hash.Add(new Record(7, "ee09"));
+            hash.Add(new Record(14, "ee08"));
+            hash.Add(new Record(15, "ee09"));
+            hash.Add(new Record(7, "ee10"));
             hash.Add(new Record(3, "ee10"));
             for (int i = 1; i < 0; i++)
             {
-
                 hash.Add(new Record(i, i.ToString("0000")));
+                hash.Contiens(new Record(i, i.ToString("0000")));
             }
-            
+
             var list = hash.Prever();
             var listZobraz = new List<string>();
             listZobraz.Add("Adresa | Platne zaznamy | Pocet zaznamov | Preplnovaci blok | Data");
