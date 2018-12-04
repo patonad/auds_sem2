@@ -92,107 +92,117 @@ namespace Kontrola
         }
         public void testuj2()
         {
-            Random ran = new Random(2);
-            List<int> stare = new List<int>();
-            List<int> nove = new List<int>();
-            for (int i = 1; i < 15000; i++)
+            for (int j = 0; j < 100; j++)
             {
-                var a = new Record(ran.Next(10000, 15000), i.ToString("0000"));
-                if (ran.Next(0, 11) <= 5)
+                hash = new DymHas<Record>(32, new Record(), 4, "pokus.bin","strom.csv");
+                Random ran = new Random(j);
+                List<int> stare = new List<int>();
+                List<int> nove = new List<int>();
+                for (int i = 1; i < 200; i++)
                 {
-                    if (!hash.Contiens(a))
+                    var a = new Record(ran.Next(10000, 15000), i.ToString("0000"));
+                    if (ran.Next(0, 11) <= 5)
                     {
-                        hash.Add(a);
-                        stare.Add(a.cislo);
-                        var o = hash.Prever();
-                        nove.Clear();
-                        foreach (var block in o)
+                        if (!hash.Contiens(a))
                         {
-                            for (int k = 0; k < block.PocetPlatnychRec; k++)
+                            hash.Add(a);
+                            stare.Add(a.cislo);
+                            var o = hash.Prever();
+                            nove.Clear();
+                            foreach (var block in o)
                             {
-                                nove.Add(block.Records[k].cislo);
+                                for (int k = 0; k < block.PocetPlatnychRec; k++)
+                                {
+                                    nove.Add(block.Records[k].cislo);
+                                }
                             }
-                        }
 
-                        nove.Sort();
-                        stare.Sort();
-                        if (nove.Count != stare.Count)
-                        {
-                            return;
-                        }
-
-                        for (int k = 0; k < nove.Count; k++)
-                        {
-                            if (nove[k] != stare[k])
+                            nove.Sort();
+                            stare.Sort();
+                            if (nove.Count != stare.Count)
                             {
                                 return;
                             }
-                        }
-                    }
-                    nove.Clear();
-                }
-                else
-                {
-                    if (stare.Count != 0)
-                    {
-                        var index = ran.Next(0, stare.Count);
-                        var b = stare[index];
-                        stare.Remove(b);
-                        hash.Delete(new Record(b, "0000"));
-                        var o = hash.Prever();
-                        nove.Clear();
-                        foreach (var block in o)
-                        {
-                            for (int k = 0; k < block.PocetPlatnychRec; k++)
+
+                            for (int k = 0; k < nove.Count; k++)
                             {
-                                nove.Add(block.Records[k].cislo);
+                                if (nove[k] != stare[k])
+                                {
+                                    return;
+                                }
                             }
                         }
+                        nove.Clear();
+                    }
+                    else
+                    {
+                        if (stare.Count != 0)
+                        {
+                            var index = ran.Next(0, stare.Count);
+                            var b = stare[index];
+                            stare.Remove(b);
+                            hash.Delete(new Record(b, "0000"));
+                            var o = hash.Prever();
+                            nove.Clear();
+                            foreach (var block in o)
+                            {
+                                for (int k = 0; k < block.PocetPlatnychRec; k++)
+                                {
+                                    nove.Add(block.Records[k].cislo);
+                                }
+                            }
 
-                        nove.Sort();
-                        stare.Sort();
-                        if (nove.Count != stare.Count)
-                        {
-                            return;
-                        }
-                        for (int k = 0; k < nove.Count; k++)
-                        {
-                            if (nove[k] != stare[k])
+                            nove.Sort();
+                            stare.Sort();
+                            if (nove.Count != stare.Count)
                             {
                                 return;
                             }
+                            for (int k = 0; k < nove.Count; k++)
+                            {
+                                if (nove[k] != stare[k])
+                                {
+                                    return;
+                                }
+                            }
                         }
                     }
                 }
+
+                Prekresli();
+                hash.zatvot();
             }
-
-            Prekresli();
         }
         public MainWindow()
         {
 
             InitializeComponent();
-            hash = new DymHas<Record>(32, new Record(), 2, "pokus.bin", 3, "pokusPrepn.bin");
+            hash = new DymHas<Record>(32, new Record(), 4, "pokus.bin", "strom.csv");
             //testuj2();
             //DymHas<Record> hash = new DymHas<Record>(20, new Record(), 2, "pokus.bin", 3, "pokusPrepn.bin");
 
 
-            hash.Add(new Record(8, "4045"));
-            hash.Add(new Record(16, "2047"));
-            hash.Add(new Record(4, "cc015"));
-            hash.Add(new Record(12, "dd04"));
-            hash.Add(new Record(2, "ee05"));
-            hash.Add(new Record(10, "ee06"));
-            hash.Add(new Record(6, "ee07"));
-            hash.Add(new Record(14, "ee08"));
-            hash.Add(new Record(1, "ee05"));
-            hash.Add(new Record(9, "ee06"));
-            hash.Add(new Record(5, "ee07"));
-            hash.Add(new Record(13, "ee08"));
-            hash.Add(new Record(3, "ee09"));
-            hash.Add(new Record(11, "ee10"));
-            hash.Add(new Record(7, "ee10"));
-            hash.Add(new Record(15, "ee10"));
+            //hash.Add(new Record(8, "4045"));
+            //hash.Add(new Record(16, "2047"));
+            //hash.Add(new Record(4, "cc015"));
+            //hash.Add(new Record(12, "dd04"));
+            //hash.Add(new Record(2, "ee05"));
+            //hash.Add(new Record(10, "ee06"));
+            //hash.Add(new Record(6, "ee07"));
+            //hash.Add(new Record(14, "ee08"));
+            //hash.Add(new Record(1, "ee05"));
+            //hash.Add(new Record(9, "ee06"));
+            //hash.Add(new Record(5, "ee07"));
+            //hash.Add(new Record(13, "ee08"));
+            //hash.Add(new Record(3, "ee09"));
+            //hash.Add(new Record(11, "ee10"));
+            //hash.Add(new Record(7, "ee10"));
+            //hash.Add(new Record(15, "ee10"));
+
+
+
+
+
 
             //hash.Delete(new Record(8, "0000"));
             //hash.Delete(new Record(4, "0000"));
@@ -224,7 +234,7 @@ namespace Kontrola
             //}
 
             //DG.ItemsSource = listZobraz;
-            Prekresli();
+            // Prekresli();
 
         }
 
@@ -304,6 +314,24 @@ namespace Kontrola
             if (Koho.Text != "")
                 hash.Delete(new Record(Int32.Parse(Koho.Text), "AAAA"));
             Prekresli();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (Koho.Text != "")
+            {
+
+                var bo = hash.FInd(new Record(Int32.Parse(Koho.Text), "AAAA"));
+                if (bo == null)
+                {
+                    MessageBox.Show("Nenasiel sa");
+                }
+                else
+                {
+                    MessageBox.Show("Nasiel sa");
+                }
+            }
+        
         }
     }
 }

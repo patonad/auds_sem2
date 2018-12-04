@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Permissions;
@@ -20,17 +21,31 @@ namespace audsSem2
         private T _typ;
         public List<int> volneBloky;
         public int DlzkaHashu { get; set; }
-        public int PoslednaAdresa { get; set; }
-
-        public DymHas(int hlbka, T data, int pocetVBloku, string adresaSuboru, int pocetVPrepnlovacomBloku,
-            string adresaPreplnovaciehoSuboru)
+       public string AdresaUlozenia { get; set; }
+        public string AdresaSuboru { get; set; }
+        public DymHas(int hlbka, T data, int pocetVBloku, string adresaSuboru,
+            string adresaUlozenia)
         {
+            AdresaSuboru = adresaSuboru;
+            AdresaUlozenia = adresaUlozenia;
             DlzkaHashu = hlbka;
             volneBloky = new List<int>();
             _typ = data;
             _zapisovac = new Zapisovac<T>(adresaSuboru, new Block<T>(pocetVBloku, 0, data));
             PocetVBloku = pocetVBloku;
             Adresa = 0;
+        }
+
+        public void UlozSa()
+        {
+            FileStream fs = new FileStream(AdresaUlozenia,FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs);
+            sw.WriteLine(Adresa + ";" + PocetVBloku + ";" + DlzkaHashu + ";" + AdresaUlozenia+";"+AdresaSuboru);
+            foreach (var i in volneBloky)
+            {
+                sw.Write(i+";");
+            }
+            // dorobit podla toho ako budem moct ukladat strom
         }
 
         public int AkyBit(int pozicia, byte[] pole)
@@ -147,6 +162,11 @@ namespace audsSem2
                 }
             }
             return ret;
+        }
+
+        public void zatvot()
+        {
+            _zapisovac.Zatvor();
         }
 
         public ExternalNode Rozsir(ref Block<T> blok, T data, ExternalNode node)

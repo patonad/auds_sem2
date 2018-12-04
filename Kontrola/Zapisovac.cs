@@ -21,10 +21,12 @@ namespace audsSem2
             _reader = new BinaryReader(fs);
             _writer = new BinaryWriter(fs);
         }
-        public void ZatvorZapis()
+        public void Zatvor()
         {
             _writer.Flush();
             _writer.Close();
+             _reader.Close();
+            
         }
         public Block<T> Typ { get; set; }
         public String NazovSuboru { get; set; }
