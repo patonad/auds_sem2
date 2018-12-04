@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.IO;
 using System.Linq;
 using System.Security.Authentication.ExtendedProtection;
@@ -30,10 +31,10 @@ namespace audsSem2
         private BinaryReader _reader;
         private BinaryWriter _writer;
         private FileStream fs;
-        public void skrat()
+        public void skrat(int a)
         {
 
-            fs.SetLength(Math.Max(0, fs.Length - Typ.GetSize()));
+            fs.SetLength(Math.Max(0, fs.Length - (Typ.GetSize()*a)));
             fs.Flush();
 
         }
