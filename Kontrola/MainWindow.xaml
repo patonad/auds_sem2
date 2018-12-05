@@ -8,13 +8,24 @@
         Title="MainWindow" Height="536.591" Width="800">
     <Grid>
         <ListView Name="DG" HorizontalAlignment="Left" Height="374" Margin="25,13,0,0" VerticalAlignment="Top" Width="735">
-            <!--<DataGrid.Columns>
-                <DataGridTextColumn Width="100" Header="Pletne zaznamy" Binding="{Binding Path=PocetPlatnychRec}"/>
-                <DataGridTextColumn Width="120" Header="Pocet zaznaomov" Binding="{Binding Path=PocetRec}"/>
-                <DataGridTextColumn Width="100" Header="Preplnovaci blok" Binding="{Binding Path=PreplnovaciBlok}"/>
-                <DataGridTextColumn Width="*" Header="Data" Binding="{Binding Path=PreplnovaciBlok}"/>
-            </DataGrid.Columns>-->
-            
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding ="{Binding Item1}"  Value="0">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        
+                        <TextBlock Text="{Binding Item2}" />
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
         <TextBox Name="Koho"  HorizontalAlignment="Left" Height="23" Margin="157,422,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <Button Content="Pridaj" HorizontalAlignment="Left" Margin="287,423,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>

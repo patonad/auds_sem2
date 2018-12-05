@@ -28,6 +28,10 @@ namespace audsSem2
         public string text { get; set; }
         public byte[] GetHash()
         {
+            //var a = BitConverter.GetBytes(cislo);
+            //Byte[] ret = new byte[1];
+            //ret[0] = a[0];
+            //return ret;
             return BitConverter.GetBytes(cislo);
         }
 

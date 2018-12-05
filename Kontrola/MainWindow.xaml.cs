@@ -31,7 +31,7 @@ namespace Kontrola
                 Random ran = new Random();
                 List<int> stare = new List<int>();
                 List<int> nove = new List<int>();
-                for (int i = 1; i < 10000; i++)
+                for (int i = 1; i < 200; i++)
                 {
                     var a = new Record(ran.Next(10000, 11000), i.ToString("0000"));
                     if (!hash.Contiens(a))
@@ -60,9 +60,8 @@ namespace Kontrola
                 }
 
                 nove.Clear();
-
-                for (int i = 0; i < stare.Count;)
-                {
+               for (int i = 0; i < stare.Count;)
+               {
                     var index = ran.Next(0, stare.Count);
                     var a = stare[index];
                     stare.Remove(a);
@@ -88,26 +87,46 @@ namespace Kontrola
                 }
 
             }
-            Prekresli();
+           // Prekresli();
         }
         public void testuj2()
         {
-            for (int j = 0; j < 100; j++)
+            for (int j = 0; j < 10; j++)
             {
-                hash = new DymHas<Record>(32, new Record(), 4, "pokus.bin","strom.csv");
-                Random ran = new Random(j);
+                hash = new DymHas<Record>(1000000, new Record(), 4, "pokus.bin","strom.csv");
+                Random ran = new Random(j+200);
                 List<int> stare = new List<int>();
                 List<int> nove = new List<int>();
-                for (int i = 1; i < 200; i++)
+                for (int i = 1; i < 1000; i++)
                 {
-                    var a = new Record(ran.Next(10000, 15000), i.ToString("0000"));
+                    var a = new Record(ran.Next(2000, 10000), i.ToString("0000"));
                     if (ran.Next(0, 11) <= 5)
                     {
-                        if (!hash.Contiens(a))
+                        if (!stare.Contains(a.cislo))
                         {
-                            hash.Add(a);
-                            stare.Add(a.cislo);
+                            if (i == 393)
+                            {
+                                var cs= 0;
+                            }
+
+
+                            try
+                            {
+                                hash.Add(a);
+                                stare.Add(a.cislo);
+                            }
+                            catch (Exception e)
+                            {
+                                
+                            }
                             var o = hash.Prever();
+                            if (o.Count != 0)
+                            {
+                                if (o.Last().PocetPlatnychRec == 0)
+                                {
+                                    return;
+                                }
+                            }
                             nove.Clear();
                             foreach (var block in o)
                             {
@@ -141,8 +160,21 @@ namespace Kontrola
                             var index = ran.Next(0, stare.Count);
                             var b = stare[index];
                             stare.Remove(b);
+                            if (j == 7 && i == 78)
+                            {
+                                int ra = 0;
+                            }
+
+
                             hash.Delete(new Record(b, "0000"));
                             var o = hash.Prever();
+                            if (o.Count != 0)
+                            {
+                                if (o.Last().PocetPlatnychRec == 0)
+                                {
+                                    return;
+                                }
+                            }
                             nove.Clear();
                             foreach (var block in o)
                             {
@@ -177,7 +209,7 @@ namespace Kontrola
         {
 
             InitializeComponent();
-            hash = new DymHas<Record>(32, new Record(), 4, "pokus.bin", "strom.csv");
+            hash = new DymHas<Record>(4, new Record(), 2, "pokus.bin", "strom.csv");
             //testuj2();
             //DymHas<Record> hash = new DymHas<Record>(20, new Record(), 2, "pokus.bin", 3, "pokusPrepn.bin");
 
@@ -241,26 +273,18 @@ namespace Kontrola
         private void Prekresli()
         {
             var list = hash.Prever();
-            if (list.Count != 0)
-            {
-                if (list.Last().PocetPlatnychRec == 0)
-                {
-                    return;
-                }
-            }
-
-            var listZobraz = new List<string>();
-            listZobraz.Add("Adresa | Platne zaznamy | Pocet zaznamov | Preplnovaci blok | Data");
+            var listZobraz = new List<Tuple<int,string>>();
+            listZobraz.Add(new Tuple<int, string>(2,"Adresa | Platne zaznamy | Pocet zaznamov | Data"));
             foreach (var block in list)
             {
-                string str = String.Format("{0,-10} | {1,-24} | {2,-26}| {3,-25} |", block.SvojaAdresa,
-                    block.PocetPlatnychRec, block.PocetRec, block.PreplnovaciBlok);
+                string str = String.Format("{0,-10} | {1,-24} | {2,-26}| ", block.SvojaAdresa,
+                    block.PocetPlatnychRec, block.PocetRec);
                 foreach (var blockRecord in block.Records)
                 {
                     str += "   " + blockRecord.ToString();
                 }
 
-                listZobraz.Add(str);
+                listZobraz.Add(new Tuple<int, string>(block.PocetPlatnychRec, str));
 
             }
 
@@ -270,40 +294,16 @@ namespace Kontrola
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //for (int j = 0; j < 10; j++)
-            //{
-            //    List<int> list = new List<int>();
-            //    Random ran = new Random(j);
-            //    if (j == 5)
-            //    {
-            //        var a = 1;
-            //    }
+            try
+            {
 
-            //    for (int i = 0; i < 10; i++)
-            //    {
-
-            //        if (i == 2)
-            //        {
-            //            var a = 0;
-            //        }
-
-            //        if (ran.Next(0, 6) <= 2)
-            //        {
-            //            var a = ran.Next(1, 5);
-            //            if (!list.Contains(a))
-            //                list.Add(a);
-            //            hash.Add(new Record(a, "AAAA"));
-            //        }
-            //        else
-            //        {
-            //            var a = ran.Next(1, 5);
-            //            if (list.Contains(a))
-            //                list.Remove(a);
-            //            hash.Delete(new Record(a, "AAAA"));
-            //        }
-            //    }
-            if (Koho.Text != "")
-                hash.Add(new Record(Int32.Parse(Koho.Text), "AAAA"));
+                if (Koho.Text != "")
+                    hash.Add(new Record(Int32.Parse(Koho.Text), "AAAA"));
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Zly hash");
+            }
             Prekresli();
 
 
@@ -324,7 +324,7 @@ namespace Kontrola
                 var bo = hash.FInd(new Record(Int32.Parse(Koho.Text), "AAAA"));
                 if (bo == null)
                 {
-                    MessageBox.Show("Nenasiel sa");
+                    MessageBox.Show("Nenasiel sa","Nenasiel sa",MessageBoxButton.OK,MessageBoxImage.Error);
                 }
                 else
                 {

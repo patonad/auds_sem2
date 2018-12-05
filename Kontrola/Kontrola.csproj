@@ -55,15 +55,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Block.cs" />
+    <Compile Include="Hash\Block.cs" />
     <Compile Include="Databazka.cs" />
-    <Compile Include="DymHas.cs" />
-    <Compile Include="ExternalNode.cs" />
-    <Compile Include="InternalNode.cs" />
-    <Compile Include="IRecord.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="Record.cs" />
-    <Compile Include="Zapisovac.cs" />
+    <Compile Include="Hash\DymHas.cs" />
+    <Compile Include="Hash\ExternalNode.cs" />
+    <Compile Include="Hash\InternalNode.cs" />
+    <Compile Include="Hash\IRecord.cs" />
+    <Compile Include="Hash\Node.cs" />
+    <Compile Include="Hash\Record.cs" />
+    <Compile Include="Hash\Zapisovac.cs" />
+    <Compile Include="ZaznamPodlaCisla.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,8 +104,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hash\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

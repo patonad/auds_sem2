@@ -50,7 +50,12 @@ namespace audsSem2
 
         public int AkyBit(int pozicia, byte[] pole)
         {
-            return (pole[pozicia / 8] & (1 << pozicia % 8)) != 0 ? 1 : 0;
+            if (pozicia >= pole.Length*8 || pozicia == DlzkaHashu)
+            {
+                throw new Exception("Zla Hashovacka");
+            }
+                return (pole[pozicia / 8] & (1 << pozicia % 8)) != 0 ? 1 : 0;
+          
         }
         public void PridajVolnuAdresu(int data)
         {
@@ -377,18 +382,18 @@ namespace audsSem2
             {
                 if (((ExternalNode) Root).PocetZaznamov < PocetVBloku)
                 {
-                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode) Root).Adresa), _typ);
+                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode) Root).Adresa), _typ, ((ExternalNode)Root).Adresa);
                     return (ExternalNode) Root;
                 }
                 else
                 {
-                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode) Root).Adresa), _typ);
-                    if (Root.HlbkaBloku == DlzkaHashu)
-                    {
-                        return (ExternalNode) Root;
-                    }
-                    else
-                    {
+                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode) Root).Adresa), _typ, ((ExternalNode)Root).Adresa);
+                    //if (Root.HlbkaBloku == DlzkaHashu)
+                    //{
+                    //    return (ExternalNode) Root;
+                    //}
+                    //else
+                    //{
                         var a = Rozsir(ref blok, data, (ExternalNode) Root);
                         if (a.Adresa == -1)
                         {
@@ -397,7 +402,7 @@ namespace audsSem2
                         }
 
                         return a;
-                    }
+                    //}
                 }
             }
             else
@@ -405,6 +410,7 @@ namespace audsSem2
                 var node = najdiNode(data);
                 if (node.Adresa == -1)
                 {
+
                     node.Adresa = DajAdresu();
                     blok = new Block<T>(PocetVBloku, node.Adresa, _typ);
                     return node;
@@ -412,21 +418,22 @@ namespace audsSem2
 
                 if (node.PocetZaznamov < PocetVBloku)
                 {
-                    blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ);
+                    blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ, node.Adresa);
                     return node;
                 }
                 else
                 {
-                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode) node).Adresa), _typ);
-                    if (node.HlbkaBloku == DlzkaHashu)
-                    {
-                        return (ExternalNode) node;
-                    }
-                    else
-                    {
+                    blok = new Block<T>(_zapisovac.citaj(((ExternalNode) node).Adresa), _typ, ((ExternalNode)node).Adresa);
+                    //if (node.HlbkaBloku == DlzkaHashu)
+                    //{
+                    //    return (ExternalNode) node;
+                    //}
+                    //else
+                    //{
                         node = Rozsir(ref blok, data, node);
                         return node;
-                    }
+                    //
+                    //}
                 }
             }
         }
@@ -441,7 +448,7 @@ namespace audsSem2
                     return null;
                 }
 
-                blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ);
+                blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ, node.Adresa);
                 while (true)
                 {
                     foreach (var blokRecord in blok.Records)
@@ -451,17 +458,8 @@ namespace audsSem2
                             return node;
                         }
                     }
-
-                    if (blok.PreplnovaciBlok == -1)
-                    {
                         return null;
                     }
-                    else
-                    {
-                        blok = new Block<T>(_zapisovac.citaj(blok.PreplnovaciBlok), _typ);
-                    }
-
-                }
             }
             else
             {
@@ -479,7 +477,7 @@ namespace audsSem2
                     return default(T);
                 }
 
-                var blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ);
+                var blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ, node.Adresa);
                 while (true)
                 {
                     foreach (var blokRecord in blok.Records)
@@ -490,14 +488,9 @@ namespace audsSem2
                         }
                     }
 
-                    if (blok.PreplnovaciBlok == -1)
-                    {
+                    
                         return default(T);
-                    }
-                    else
-                    {
-                        blok = new Block<T>(_zapisovac.citaj(blok.PreplnovaciBlok), _typ);
-                    }
+                    
 
                 }
             }
@@ -519,7 +512,7 @@ namespace audsSem2
                     return false;
                 }
 
-                var blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ);
+                var blok = new Block<T>(_zapisovac.citaj(node.Adresa), _typ, node.Adresa);
                 while (true)
                 {
                     foreach (var blokRecord in blok.Records)
@@ -530,14 +523,9 @@ namespace audsSem2
                         }
                     }
 
-                    if (blok.PreplnovaciBlok == -1)
-                    {
+                   
                         return false;
-                    }
-                    else
-                    {
-                        blok = new Block<T>(_zapisovac.citaj(blok.PreplnovaciBlok), _typ);
-                    }
+                    
 
                 }
             }
@@ -557,7 +545,7 @@ namespace audsSem2
             {
                 var pole = new byte[cislo];
                 System.Buffer.BlockCopy(a, i * cislo, pole, 0, cislo);
-                var blok = new Block<T>(pole, _typ);
+                var blok = new Block<T>(pole, _typ,i);
                 ret.Add(blok);
             }
 
@@ -606,6 +594,20 @@ namespace audsSem2
                     {
                         if (par.Left is InternalNode)
                         {
+                            if (blok.PocetPlatnychRec == 0)
+                            {
+                                node.Adresa = -1;
+                                PridajVolnuAdresu(blok.SvojaAdresa);
+                                if (!skratPole(blok.SvojaAdresa))
+                                {
+                                    _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                    return;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
                             _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
                             return;
                         }
@@ -643,7 +645,7 @@ namespace audsSem2
                             if ((par.Left as ExternalNode).PocetZaznamov + node.PocetZaznamov <= PocetVBloku)
                             {
                                 Block<T> blok1 = new Block<T>(_zapisovac.citaj((par.Left as ExternalNode).Adresa),
-                                    _typ); // nacital som bloky aj nevalidne
+                                    _typ, (par.Left as ExternalNode).Adresa); // nacital som bloky aj nevalidne
                                 if (blok.SvojaAdresa < blok1.SvojaAdresa)
                                 {
                                     for (int i = 0; i < blok1.PocetPlatnychRec; i++)
@@ -717,6 +719,20 @@ namespace audsSem2
                     {
                         if (par.Right is InternalNode)
                         {
+                            if (blok.PocetPlatnychRec == 0)
+                            {
+                                node.Adresa = -1;
+                                PridajVolnuAdresu(blok.SvojaAdresa);
+                                if (!skratPole(blok.SvojaAdresa))
+                                {
+                                    _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
+                                    return;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
                             _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
                             return;
                         }
@@ -758,7 +774,7 @@ namespace audsSem2
                             if ((par.Right as ExternalNode).PocetZaznamov + node.PocetZaznamov <= PocetVBloku)
                             {
                                 Block<T> blok1 = new Block<T>(_zapisovac.citaj((par.Right as ExternalNode).Adresa),
-                                    _typ); // nacital som bloky aj nevalidne
+                                    _typ, (par.Right as ExternalNode).Adresa); // nacital som bloky aj nevalidne
 
                                 if (blok.SvojaAdresa < blok1.SvojaAdresa)
                                 {
@@ -786,7 +802,6 @@ namespace audsSem2
                                     PridajVolnuAdresu(blok.SvojaAdresa);
                                     if (!skratPole(blok.SvojaAdresa))
                                     {
-
                                         _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
                                     }
 
@@ -800,7 +815,6 @@ namespace audsSem2
                                     node.HlbkaBloku--;
                                     _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
                                     node.PocetZaznamov = blok.PocetPlatnychRec;
-                                    ;
                                     node.Adresa = blok.SvojaAdresa;
                                     return;
                                 }
@@ -908,7 +922,7 @@ namespace audsSem2
             }
             else
             {
-                return false;
+               throw new Exception("Zly hash");
             }
 
             return false;
