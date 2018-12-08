@@ -91,13 +91,13 @@ namespace Kontrola
         }
         public void testuj2()
         {
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < 50; j++)
             {
-                hash = new DymHas<Record>(1000000, new Record(), 4, "pokus.bin","strom.csv");
-                Random ran = new Random(j+200);
+                hash = new DymHas<Record>(1000000, new Record(), 1 +j % 5, "pokus.bin","strom.csv");
+                Random ran = new Random(j+400);
                 List<int> stare = new List<int>();
                 List<int> nove = new List<int>();
-                for (int i = 1; i < 1000; i++)
+                for (int i = 1; i < 2000; i++)
                 {
                     var a = new Record(ran.Next(2000, 10000), i.ToString("0000"));
                     if (ran.Next(0, 11) <= 5)
@@ -108,8 +108,6 @@ namespace Kontrola
                             {
                                 var cs= 0;
                             }
-
-
                             try
                             {
                                 hash.Add(a);

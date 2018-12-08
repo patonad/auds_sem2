@@ -36,17 +36,54 @@ namespace audsSem2
             Adresa = 0;
         }
 
-        public void UlozSa()
-        {
-            FileStream fs = new FileStream(AdresaUlozenia,FileMode.Create);
-            StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(Adresa + ";" + PocetVBloku + ";" + DlzkaHashu + ";" + AdresaUlozenia+";"+AdresaSuboru);
-            foreach (var i in volneBloky)
-            {
-                sw.Write(i+";");
-            }
-            // dorobit podla toho ako budem moct ukladat strom
-        }
+        //public void UlozSa()
+        //{
+        //    FileStream fs = new FileStream(AdresaUlozenia,FileMode.Create);
+        //    StreamWriter sw = new StreamWriter(fs);
+        //    sw.WriteLine(Adresa + ";" + PocetVBloku + ";" + DlzkaHashu + ";" + AdresaUlozenia+";"+AdresaSuboru);
+        //    foreach (var i in volneBloky)
+        //    {
+        //        sw.Write(i+";");
+        //    }
+        //    if (Root == null)
+        //    {
+        //        return;
+        //    }
+        //    Queue<Node> queue = new Queue<Node>();
+        //    queue.Enqueue(Root);
+        //    int thisLevel = 1;
+        //    int nextLevel = 0;
+        //    Node node;
+        //    while (queue.Any())
+        //    {
+        //        for (int i = 0; i < thisLevel; i++)
+        //        {
+        //            node = queue.Dequeue();
+        //            traversal.append(node.data); // prida
+        //            if (node.left != null && node.right != null)
+        //            {
+        //                nextLevel += 2;
+        //                queue.add(node.left);
+        //                queue.add(node.right);
+        //            }
+        //            else if (node.left != null || node.right != null)
+        //            {
+        //                nextLevel += 1;
+        //                if (node.left != null)
+        //                {
+        //                    queue.add(node.left);
+        //                }
+        //                else
+        //                {
+        //                    queue.add(node.right);
+        //                }
+        //            }
+        //        }
+        //        thisLevel = nextLevel;
+        //        nextLevel = 0;
+        //    }
+        //    return traversal.toString();
+        //}
 
         public int AkyBit(int pozicia, byte[] pole)
         {
@@ -522,11 +559,7 @@ namespace audsSem2
                             return true;
                         }
                     }
-
-                   
-                        return false;
-                    
-
+                    return false;
                 }
             }
             else

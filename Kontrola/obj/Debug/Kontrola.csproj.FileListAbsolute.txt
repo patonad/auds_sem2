@@ -13,3 +13,7 @@ C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.csproj.
 C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.exe
 C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.pdb
 C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Kontrola.csprojAssemblyReference.cache
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Okno.g.cs
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Okno.baml
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Zobrazovac.g.cs
+C:\Users\Pato\source\repos\patonad\auds_sem2\Kontrola\obj\Debug\Zobrazovac.baml

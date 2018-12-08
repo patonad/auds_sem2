@@ -64,7 +64,15 @@
     <Compile Include="Hash\Node.cs" />
     <Compile Include="Hash\Record.cs" />
     <Compile Include="Hash\Zapisovac.cs" />
+    <Compile Include="Nehnutelnost.cs" />
+    <Compile Include="Okno.xaml.cs">
+      <DependentUpon>Okno.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ZaznamPodlaCisla.cs" />
+    <Compile Include="Zobrazovac.xaml.cs">
+      <DependentUpon>Zobrazovac.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ZoznamPodlaNazvuACisla.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -77,6 +85,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Okno.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Zobrazovac.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -1,0 +1,147 @@
+﻿<Window x:Class="Kontrola.Okno"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kontrola"
+        mc:Ignorable="d"
+        Title="Okno" Height="600" Width="1165">
+    <Grid Margin="0,-2,0.4,2.4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid  Width=" 200" HorizontalAlignment="Left" Background="AliceBlue" Margin="0,0,0,0.4">
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Vyhladaj/Zmen" Width="182" Margin="10,75,8,438.4" Click="Button_Click_2" />
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Pridaj" Width="182" Margin="10,134,8,375.4" Click="Button_Click_1" RenderTransformOrigin="0.5,0.502" />
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Vypis suborov" Width="182" Margin="9,266,9,248" RenderTransformOrigin="0.5,0.5" Click="Button_Click_4" />
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Odstráň" Width="182" Margin="12,202,6,308" RenderTransformOrigin="0.47,0.544" Click="Button_Click_3" />
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Generuj" Width="182" Margin="10,324,8,185" RenderTransformOrigin="0.5,0.5" Click="Button_Click_12"   />
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Uloz" Width="182" Margin="8,388,10,122" RenderTransformOrigin="0.47,0.544" />
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Nacitaj" Width="182" Margin="10,449,8,61" RenderTransformOrigin="0.5,0.5"   />
+
+        </Grid>
+        <Grid Height="70" VerticalAlignment="Top" Background="AliceBlue" Margin="0,0,-1.6,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="337*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid VerticalAlignment="Top"  HorizontalAlignment="Left" Background="PowderBlue" Width="200" Height="70">
+            <Label Content="Menu" HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Height="92" Margin="30,-6,30,-16"/>
+        </Grid>
+
+        <Grid Visibility="Collapsed" Name="Pridaj">
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="416,106,0,0" TextWrapping="Wrap" Text="Identifikacne cislo nehnutelnosti:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="441,151,0,0" TextWrapping="Wrap" Text="Supistne cislo nehnutelnosti:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="429,195,0,0" TextWrapping="Wrap" Text="Nazov katastralneho uzamioa:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="589,234,0,0" TextWrapping="Wrap" Text="Popis:" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" Name="PIC" Height="23" Margin="646,106,181.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
+            <TextBox FontSize="15" Name="PSC" Height="23" Margin="646,151,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="323"/>
+            <TextBox FontSize="15" Name="PNK" Height="24" Margin="646,192,184.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="4.141,6.2"/>
+            <TextBox FontSize="15" Name="PPO" Height="23" Margin="646,234,183.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Button FontSize="15" Content="Pridaj" HorizontalAlignment="Left" Margin="516,274,0,0" VerticalAlignment="Top" Width="243" Click="Button_Click"/>
+            <ListView Name="LWP" HorizontalAlignment="Left" Height="164" VerticalAlignment="Top" Width="813" Margin="268,334,0,0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding ="{Binding Item1}"  Value="-1">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Background" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+
+                            <TextBlock Text="{Binding Item2}" />
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <Grid Visibility="Collapsed" Name="Vyhladaj" Margin="0,2,0.4,-1.6">
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="416,104,0,0" TextWrapping="Wrap" Text="Identifikacne cislo nehnutelnosti:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="441,147,0,0" TextWrapping="Wrap" Text="Supistne cislo nehnutelnosti:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="429,187,0,0" TextWrapping="Wrap" Text="Nazov katastralneho uzamioa:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="418,434,0,0" TextWrapping="Wrap" Text="Popis:" VerticalAlignment="Top" RenderTransformOrigin="-1.102,3.75"/>
+            <TextBox FontSize="15" Name="VIC" Height="23" Margin="646,102,181,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
+            <TextBox FontSize="15" Name="VNK" Height="24" Margin="646,186,184,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="4.141,6.2"/>
+            <TextBox FontSize="15" Name="VVPO" Height="23" Margin="490,430,55,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Button FontSize="15" Content="Vyhladaj podla Sup" HorizontalAlignment="Left" Margin="667,233,0,0" VerticalAlignment="Top" Width="243" Click="Button_Click_8"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="262,396,0,0" TextWrapping="Wrap" Text="Nazov katastralneho uzamioa:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="271,353,0,0" TextWrapping="Wrap" Text="Supistne cislo nehnutelnosti:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="243,316,0,0" TextWrapping="Wrap" Text="Identifikacne cislo nehnutelnosti:" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" x:Name="VVIC" Height="23" Margin="490,314,55,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" x:Name="VVSC" Height="23" Margin="490,351,55,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" x:Name="VVNK" Height="23" Margin="490,392,55,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" x:Name="VSC" Height="24" Margin="646,144,184,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="4.141,6.2"/>
+            <Button FontSize="15" Content="Zmen" HorizontalAlignment="Left" Margin="526,477,0,0" VerticalAlignment="Top" Width="243" Click="Button_Click_9"/>
+            <Button FontSize="15" Content="Vyhladaj podla iden. cisla" HorizontalAlignment="Left" Margin="382,234,0,0" VerticalAlignment="Top" Width="243" RenderTransformOrigin="1.11,0.804" Click="Button_Click_7"/>
+        </Grid>
+        <Grid Visibility="Collapsed" Name="Odstran">
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="441,133,0,0" TextWrapping="Wrap" Text="Supistne cislo nehnutelnosti:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="429,173,0,0" TextWrapping="Wrap" Text="Nazov katastralneho uzamioa:" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" Name="OSC" Height="23" Margin="646,131,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="314"/>
+            <TextBox FontSize="15" Name="ONK" Height="24" Margin="646,170,189.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="4.141,6.2"/>
+            <Button FontSize="15" Content="Odstran" HorizontalAlignment="Left" Margin="516,222,0,0" VerticalAlignment="Top" Width="243" Click="Button_Click_6"/>
+            <ListView Name="LWO" HorizontalAlignment="Left" Height="206" Margin="271,297,0,0" VerticalAlignment="Top" Width="807">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding ="{Binding Item1}"  Value="-1">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Background" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+
+                            <TextBlock Text="{Binding Item2}" />
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+           
+        </Grid>
+        <Grid Visibility="Collapsed" Name="Vypis">
+            <Button FontSize="15" Content="Hlavny subor" HorizontalAlignment="Left" Margin="219,112,0,0" VerticalAlignment="Top" Width="271" Click="Button_Click_5"/>
+            <Button FontSize="15" Content="Subor pre DH s identyfikacnym cislo" HorizontalAlignment="Left" Margin="813,112,0,0" VerticalAlignment="Top" Width="292" Click="Button_Click_11"/>
+            <Button FontSize="15" Content="Subor pre DH so  Sup. cislom a nazvom" HorizontalAlignment="Left" Margin="509,112,0,0" VerticalAlignment="Top" Width="273" Click="Button_Click_10"/>
+            <ListView Name="LWVypis" HorizontalAlignment="Left" Height="344" Margin="244,168,0,0" VerticalAlignment="Top" Width="834">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding ="{Binding Item1}"  Value="-1">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Background" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel>
+
+                            <TextBlock Text="{Binding Item2}" />
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <Grid Visibility="Visible" Name="Generuj">
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="430,196,0,0" TextWrapping="Wrap" Text="Pocet katastrov:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="427,236,0,0" TextWrapping="Wrap" Text="Pocet nehnutelnosti v katastri:" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" Name="GPK" Height="24" Margin="646,192,184.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="4.141,6.2"/>
+            <TextBox FontSize="15" Name="GPN" Height="23" Margin="646,234,183.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Button FontSize="15" Content="Generuj" HorizontalAlignment="Left" Margin="516,274,0,0" VerticalAlignment="Top" Width="243" Click="Button_Click_13"/>
+        </Grid>
+
+    </Grid>
+
+</Window>
