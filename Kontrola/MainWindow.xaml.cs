@@ -94,7 +94,7 @@ namespace Kontrola
         {
             for (int j = 0; j < 1; j++)
             {
-                hash = new DymHas<Record>(1000000, new Record(), 1 +j % 5, "pokus.bin","strom.csv");
+                hash = new DymHas<Record>(1000000, new Record(), 4, "pokus.bin","strom.csv");
                 Random ran = new Random(j+401);
                 List<int> stare = new List<int>();
                 List<int> nove = new List<int>();
@@ -288,7 +288,7 @@ namespace Kontrola
             //}
 
             //DG.ItemsSource = listZobraz;
-            // Prekresli();
+             Prekresli();
 
         }
 

@@ -53,33 +53,38 @@ namespace Kontrola
         // pridaj
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (PIC.Text == "" || PSC.Text == "" || PPO.Text == "" || PNK.Text == "")
+            if (DB != null)
             {
-                MessageBox.Show("Nezadal si daky udaj");
-                return;
-            }
+                if (PIC.Text == "" || PSC.Text == "" || PPO.Text == "" || PNK.Text == "")
+                {
+                    MessageBox.Show("Nezadal si daky udaj");
+                    return;
+                }
 
-            int sup;
-            int iden;
-            try
-            {
-                sup = Int32.Parse(PSC.Text);
-                iden = Int32.Parse(PIC.Text);
+                int sup;
+                int iden;
+                try
+                {
+                    sup = Int32.Parse(PSC.Text);
+                    iden = Int32.Parse(PIC.Text);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Zle zadane cislo");
+                    return;
+                }
+
+                DB.PridajNehnutelnost(sup, PNK.Text, PPO.Text, iden);
+                LWP.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
             }
-            catch (Exception exception)
-            {
-                MessageBox.Show("Zle zadane cislo");
-                return;
-            }
-            DB.PridajNehnutelnost(sup, PNK.Text, PPO.Text, iden);
-            LWP.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Schovaj();
             Pridaj.Visibility = Visibility.Visible;
-            LWP.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
+            if (DB != null)
+                LWP.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -92,7 +97,8 @@ namespace Kontrola
         {
             Schovaj();
             Odstran.Visibility = Visibility.Visible;
-            LWO.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
+            if (DB != null)
+                LWO.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
@@ -103,166 +109,193 @@ namespace Kontrola
         //vypis hlavny subor
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-            LWVypis.ItemsSource = DB.celySuborHlavny();
+            if (DB != null)
+                LWVypis.ItemsSource = DB.celySuborHlavny();
         }
         //odstarn
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            if (ONK.Text == "" || OSC.Text == "")
+            if (DB != null)
             {
-                MessageBox.Show("Nezadal si daky udaj");
-                return;
+                if (ONK.Text == "" || OSC.Text == "")
+                {
+                    MessageBox.Show("Nezadal si daky udaj");
+                    return;
+                }
+
+                int sup;
+                try
+                {
+                    sup = Int32.Parse(OSC.Text);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Zle zadane cislo");
+                    return;
+                }
+
+                DB.Odstran(sup, ONK.Text);
+                LWO.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
             }
-            int sup;
-            try
-            {
-                sup = Int32.Parse(OSC.Text);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show("Zle zadane cislo");
-                return;
-            }
-            DB.Odstran(sup,ONK.Text);
-            LWO.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
         }
         //vyhladaj poda ic
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
-            if (VIC.Text == "")
+            if (DB != null)
             {
-                MessageBox.Show("Nezadal si daky udaj");
-                return;
-            }
-            int ic;
-            try
-            {
-                ic = Int32.Parse(VIC.Text);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show("Zle zadane cislo");
-                return;
-            }
+                if (VIC.Text == "")
+                {
+                    MessageBox.Show("Nezadal si daky udaj");
+                    return;
+                }
 
-            var list = DB.Vyhladaj(ic);
-            if (list != null)
-            {
-                VVIC.Text = list[0];
-                VVSC.Text = list[1];
-                VVNK.Text = list[2].Replace(";","");
-                VVPO.Text = list[3].Replace(";","");
-                IC = Int32.Parse(list[0]);
-                SC = Int32.Parse(list[1]);
-                nazov = list[2].Replace(";", "");
-                popis = list[3].Replace(";", "");
-            }
+                int ic;
+                try
+                {
+                    ic = Int32.Parse(VIC.Text);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Zle zadane cislo");
+                    return;
+                }
 
+                var list = DB.Vyhladaj(ic);
+                if (list != null)
+                {
+                    VVIC.Text = list[0];
+                    VVSC.Text = list[1];
+                    VVNK.Text = list[2].Replace(";", "");
+                    VVPO.Text = list[3].Replace(";", "");
+                    IC = Int32.Parse(list[0]);
+                    SC = Int32.Parse(list[1]);
+                    nazov = list[2].Replace(";", "");
+                    popis = list[3].Replace(";", "");
+                }
+            }
         }
 
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
-            if (VSC.Text == "" || VNK.Text == "")
+            if (DB != null)
             {
-                MessageBox.Show("Nezadal si daky udaj");
-                return;
-            }
-            int sc;
-            try
-            {
-                sc = Int32.Parse(VSC.Text);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show("Zle zadane cislo");
-                return;
-            }
-
-            var list = DB.Vyhladaj(sc,VNK.Text);
-            if (list != null)
-            {
-                VVIC.Text = list[0];
-                VVSC.Text = list[1];
-                VVNK.Text = list[2].Replace(";", "");
-                VVPO.Text = list[3].Replace(";", "");
-                IC = Int32.Parse(list[0]);
-                SC = Int32.Parse(list[1]);
-                nazov = list[2].Replace(";", "");
-                popis = list[3].Replace(";", "");
-            }
-        }
-        //zmen
-        private void Button_Click_9(object sender, RoutedEventArgs e)
-        {
-            //nic
-            if (VVIC.Text == IC.ToString() && VVSC.Text == SC.ToString() && VVNK.Text == nazov && VVPO.Text == popis)
-            {
-                return;
-            }
-            // iba popis
-            if (VVIC.Text == IC.ToString() && VVSC.Text == SC.ToString() && VVNK.Text == nazov && VVPO.Text != popis)
-            {
-                DB.ZmenPopis(IC, VVPO.Text);
-                return;
-            }
-            //vsetko
-            if (VVIC.Text != IC.ToString() && (VVSC.Text != SC.ToString() || VVNK.Text != nazov))
-            {
-                int sc,ic;
-                try
+                if (VSC.Text == "" || VNK.Text == "")
                 {
-                    sc = Int32.Parse(VVSC.Text);
-                    ic = Int32.Parse(VVIC.Text);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show("Zle zadane cislo");
+                    MessageBox.Show("Nezadal si daky udaj");
                     return;
                 }
-                DB.ZmenVS(IC,ic,sc,VVNK.Text,VVPO.Text);
-                return;
-            }
-            // nazov alebo sup
-            if (VVSC.Text != SC.ToString() || VVNK.Text != nazov)
-            {
+
                 int sc;
                 try
                 {
-                    sc = Int32.Parse(VVSC.Text);
+                    sc = Int32.Parse(VSC.Text);
                 }
                 catch (Exception exception)
                 {
                     MessageBox.Show("Zle zadane cislo");
                     return;
                 }
-                DB.ZmenNa(IC, sc, VVNK.Text, VVPO.Text);
-                return;
+
+                var list = DB.Vyhladaj(sc, VNK.Text);
+                if (list != null)
+                {
+                    VVIC.Text = list[0];
+                    VVSC.Text = list[1];
+                    VVNK.Text = list[2].Replace(";", "");
+                    VVPO.Text = list[3].Replace(";", "");
+                    IC = Int32.Parse(list[0]);
+                    SC = Int32.Parse(list[1]);
+                    nazov = list[2].Replace(";", "");
+                    popis = list[3].Replace(";", "");
+                }
             }
-            if (VVIC.Text != IC.ToString())
+        }
+
+        //zmen
+        private void Button_Click_9(object sender, RoutedEventArgs e)
+        {
+            if (DB != null)
             {
-                int ic;
-                try
+                //nic
+                if (VVIC.Text == IC.ToString() && VVSC.Text == SC.ToString() && VVNK.Text == nazov &&
+                    VVPO.Text == popis)
                 {
-                    ic = Int32.Parse(VVIC.Text);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show("Zle zadane cislo");
                     return;
                 }
-                DB.ZmenIC(IC, ic, VVPO.Text);
-                return;
+
+                // iba popis
+                if (VVIC.Text == IC.ToString() && VVSC.Text == SC.ToString() && VVNK.Text == nazov &&
+                    VVPO.Text != popis)
+                {
+                    DB.ZmenPopis(IC, VVPO.Text);
+                    return;
+                }
+
+                //vsetko
+                if (VVIC.Text != IC.ToString() && (VVSC.Text != SC.ToString() || VVNK.Text != nazov))
+                {
+                    int sc, ic;
+                    try
+                    {
+                        sc = Int32.Parse(VVSC.Text);
+                        ic = Int32.Parse(VVIC.Text);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show("Zle zadane cislo");
+                        return;
+                    }
+
+                    DB.ZmenVS(IC, ic, sc, VVNK.Text, VVPO.Text);
+                    return;
+                }
+
+                // nazov alebo sup
+                if (VVSC.Text != SC.ToString() || VVNK.Text != nazov)
+                {
+                    int sc;
+                    try
+                    {
+                        sc = Int32.Parse(VVSC.Text);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show("Zle zadane cislo");
+                        return;
+                    }
+
+                    DB.ZmenNa(IC, sc, VVNK.Text, VVPO.Text);
+                    return;
+                }
+
+                if (VVIC.Text != IC.ToString())
+                {
+                    int ic;
+                    try
+                    {
+                        ic = Int32.Parse(VVIC.Text);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show("Zle zadane cislo");
+                        return;
+                    }
+
+                    DB.ZmenIC(IC, ic, VVPO.Text);
+                    return;
+                }
             }
         }
         // vypsi s nazvom
         private void Button_Click_10(object sender, RoutedEventArgs e)
-        {
+        { if(DB !=null)
             LWVypis.ItemsSource = DB.VypisSuborSNazvom();
         }
 
         private void Button_Click_11(object sender, RoutedEventArgs e)
         {
-            LWVypis.ItemsSource = DB.VypisSuborIdent();
+            if (DB != null)
+                LWVypis.ItemsSource = DB.VypisSuborIdent();
         }
         //generuj
         private void Button_Click_12(object sender, RoutedEventArgs e)
