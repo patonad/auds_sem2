@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -91,10 +92,10 @@ namespace Kontrola
         }
         public void testuj2()
         {
-            for (int j = 0; j < 50; j++)
+            for (int j = 0; j < 1; j++)
             {
                 hash = new DymHas<Record>(1000000, new Record(), 1 +j % 5, "pokus.bin","strom.csv");
-                Random ran = new Random(j+400);
+                Random ran = new Random(j+401);
                 List<int> stare = new List<int>();
                 List<int> nove = new List<int>();
                 for (int i = 1; i < 2000; i++)
@@ -117,6 +118,12 @@ namespace Kontrola
                             {
                                 
                             }
+                            hash.UlozSa();
+                            hash.zatvot();
+                            hash = null;
+                            FileStream fs = new FileStream("strom.csv", FileMode.Open);
+                            StreamReader sr = new StreamReader(fs);
+                            hash = new DymHas<Record>(sr, new Record(-1, "copy"));
                             var o = hash.Prever();
                             if (o.Count != 0)
                             {
@@ -165,6 +172,12 @@ namespace Kontrola
 
 
                             hash.Delete(new Record(b, "0000"));
+                            hash.UlozSa();
+                            hash.zatvot();
+                            hash = null;
+                            FileStream fs = new FileStream("strom.csv", FileMode.Open);
+                            StreamReader sr = new StreamReader(fs);
+                            hash = new DymHas<Record>(sr, new Record(-1, "copy"));
                             var o = hash.Prever();
                             if (o.Count != 0)
                             {
@@ -207,10 +220,8 @@ namespace Kontrola
         {
 
             InitializeComponent();
-            hash = new DymHas<Record>(4, new Record(), 2, "pokus.bin", "strom.csv");
-            //testuj2();
-            //DymHas<Record> hash = new DymHas<Record>(20, new Record(), 2, "pokus.bin", 3, "pokusPrepn.bin");
-
+            //hash = new DymHas<Record>(4, new Record(), 1, "pokus.bin", "strom.csv");
+            testuj2();
 
             //hash.Add(new Record(8, "4045"));
             //hash.Add(new Record(16, "2047"));
@@ -229,6 +240,19 @@ namespace Kontrola
             //hash.Add(new Record(7, "ee10"));
             //hash.Add(new Record(15, "ee10"));
 
+            //hash.Add(new Record(0, "0000"));
+            //hash.Add(new Record(2, "0002"));
+            //hash.Add(new Record(3, "0003"));
+            //hash.Add(new Record(1, "0001"));
+            //hash.Add(new Record(5, "0005"));
+        
+
+            //hash.UlozSa();
+            //hash.zatvot();
+            //hash = null;
+            //FileStream fs = new FileStream("strom.csv",FileMode.Open);
+            //StreamReader sr = new StreamReader(fs);
+            //hash = new DymHas<Record>(sr,new Record(-1,"copy"));
 
 
 

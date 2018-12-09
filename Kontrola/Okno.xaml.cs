@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,6 @@ namespace Kontrola
         public Okno()
         {
             InitializeComponent();
-            DB =new Databazka();
             //DB.PridajNehnutelnost(1, "Kataster1", "Popis1", 1);
             //DB.PridajNehnutelnost(2, "Kataster1", "Popis2", 2);
             //DB.PridajNehnutelnost(3, "Kataster1", "Popis3", 3);
@@ -290,8 +290,37 @@ namespace Kontrola
             {
                 MessageBox.Show("Zle zadane cislo");
                 return;
+                
             }
-           DB.Generuj(kat,neh);
+
+            if(DB !=null)
+                DB.Zatvor();
+            FileStream fs = new FileStream("data.bin", FileMode.Create);
+            fs.Close();
+            fs = new FileStream("ZaznamPodlaCisla.bin", FileMode.Create);
+            fs.Close();
+            fs = new FileStream("ZoznamPodlaNazvuACisla.bin", FileMode.Create);
+            fs.Close();
+            DB = new Databazka();
+            DB.Generuj(kat,neh);
+        }
+
+        private void Button_Click_14(object sender, RoutedEventArgs e)
+        {
+            if(DB != null)
+            DB.Uloz();
+        }
+
+        private void Button_Click_15(object sender, RoutedEventArgs e)
+        {
+            if (DB == null)
+            {
+                FileStream fs = new FileStream("hlavnySubor.csv", FileMode.Open);
+                StreamReader hsr = new StreamReader(fs);
+                DB = new Databazka(hsr);
+                hsr.Close();
+                fs.Close();
+            }
         }
     }
 }

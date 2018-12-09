@@ -16,8 +16,8 @@
             <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Vypis suborov" Width="182" Margin="9,266,9,248" RenderTransformOrigin="0.5,0.5" Click="Button_Click_4" />
             <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Odstráň" Width="182" Margin="12,202,6,308" RenderTransformOrigin="0.47,0.544" Click="Button_Click_3" />
             <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Generuj" Width="182" Margin="10,324,8,185" RenderTransformOrigin="0.5,0.5" Click="Button_Click_12"   />
-            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Uloz" Width="182" Margin="8,388,10,122" RenderTransformOrigin="0.47,0.544" />
-            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Nacitaj" Width="182" Margin="10,449,8,61" RenderTransformOrigin="0.5,0.5"   />
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Uloz" Width="182" Margin="8,388,10,122" RenderTransformOrigin="0.5,0.5" Click="Button_Click_14" />
+            <Button   FontSize="25" BorderBrush ="White" Background="AliceBlue" Content="Nacitaj" Width="182" Margin="10,449,8,61" RenderTransformOrigin="0.5,0.5" Click="Button_Click_15"   />
 
         </Grid>
         <Grid Height="70" VerticalAlignment="Top" Background="AliceBlue" Margin="0,0,-1.6,0">

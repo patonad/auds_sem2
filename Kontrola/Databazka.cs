@@ -19,18 +19,53 @@ namespace Kontrola
         private BinaryWriter _writer;
         private FileStream fs;
         private string NazovSuboru;
+
         public Databazka()
         {
             Adresa = 0;
             volneAdresy = new List<int>();
-            DHPodlaCisla = new DymHas<ZaznamPodlaCisla>(33,new ZaznamPodlaCisla(),4,"ZaznamPodlaCisla.bin", "ZaznamPodlaCislaDH");
-            DHPodlaNazvu = new DymHas<ZoznamPodlaNazvuACisla>(153, new ZoznamPodlaNazvuACisla(), 4, "ZoznamPodlaNazvuACisla.bin", "ZoznamPodlaNazvuACislaDH");
+            DHPodlaCisla = new DymHas<ZaznamPodlaCisla>(33, new ZaznamPodlaCisla(), 4, "ZaznamPodlaCisla.bin",
+                "ZaznamPodlaCislaDH.csv");
+            DHPodlaNazvu = new DymHas<ZoznamPodlaNazvuACisla>(153, new ZoznamPodlaNazvuACisla(), 4,
+                "ZoznamPodlaNazvuACisla.bin", "ZoznamPodlaNazvuACislaDH.csv");
             NazovSuboru = "data.bin";
             fs = new FileStream(NazovSuboru, FileMode.Create, FileAccess.ReadWrite,
                 FileShare.Read);
             _reader = new BinaryReader(fs);
             _writer = new BinaryWriter(fs);
         }
+        public Databazka(StreamReader hsr)
+        {
+            FileStream fs = new FileStream("ZaznamPodlaCislaDH.csv", FileMode.Open);
+            StreamReader sr = new StreamReader(fs);
+            DHPodlaCisla = new DymHas<ZaznamPodlaCisla>(sr, new ZaznamPodlaCisla(-1,-1));
+             fs = new FileStream("ZoznamPodlaNazvuACislaDH.csv", FileMode.Open);
+             sr = new StreamReader(fs);
+            DHPodlaNazvu = new DymHas<ZoznamPodlaNazvuACisla>(sr, new ZoznamPodlaNazvuACisla(-1, -1,"eeeeeeeeeeeeeee"));
+            NazovSuboru = "data.bin";
+            fs = new FileStream(NazovSuboru, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                FileShare.Read);
+            _reader = new BinaryReader(fs);
+            _writer = new BinaryWriter(fs);
+            var adr =hsr.ReadLine();
+            Adresa = Int32.Parse(adr);
+            var line = hsr.ReadLine();
+            var pole = line.Split(';');
+            volneAdresy = new List<int>();
+            if (pole[0] != "X")
+            {
+                for (int i = 0; i < pole.Length - 1; i++)
+                {
+                    if (pole[i] != "")
+                    {
+                        volneAdresy.Add(Int32.Parse(pole[i]));
+                    }
+                }
+            }
+        }
+
+
+
         public void PridajVolnuAdresu(int data)
         {
 
@@ -78,10 +113,12 @@ namespace Kontrola
                         break;
                     }
                 }
+
                 volneAdresy.Insert(index, data);
 
             }
         }
+
         public int DajAdresu()
         {
             if (volneAdresy.Count == 0)
@@ -97,15 +134,17 @@ namespace Kontrola
                 return a;
             }
         }
+
         public void PridajNehnutelnost(int supCislo, string nazovKaT, string popis, int idenCislo)
         {
-            Nehnutelnost neh = new Nehnutelnost(supCislo,idenCislo,nazovKaT,popis);
+            Nehnutelnost neh = new Nehnutelnost(supCislo, idenCislo, nazovKaT, popis);
             var adr = DajAdresu();
             DHPodlaNazvu.Add(new ZoznamPodlaNazvuACisla(adr, neh.SupCislo, neh.NazovKaT));
             DHPodlaCisla.Add(new ZaznamPodlaCisla(adr, neh.IdenCislo));
-            Zapis(adr,neh.ToByArray());
+            Zapis(adr, neh.ToByArray());
 
         }
+
         public List<Tuple<int, string>> celySuborHlavnyPlatneZaznamy()
         {
             _reader.Close();
@@ -121,20 +160,22 @@ namespace Kontrola
                 var pomPole = new byte[43];
                 System.Buffer.BlockCopy(pole, i * 43, pomPole, 0, 43);
                 var neh = new Nehnutelnost(pomPole);
-                if(neh.IdenCislo != -1)
-                listZobraz.Add(new Tuple<int, string>(neh.IdenCislo, neh.ToString()));
+                if (neh.IdenCislo != -1)
+                    listZobraz.Add(new Tuple<int, string>(neh.IdenCislo, neh.ToString()));
 
             }
 
             return listZobraz;
 
         }
+
         public void Zapis(int adr, byte[] pole)
         {
-            _writer.Seek(adr*43, SeekOrigin.Begin);
+            _writer.Seek(adr * 43, SeekOrigin.Begin);
             _writer.Write(pole);
             _writer.Flush();
         }
+
         public Nehnutelnost citaj(int adr)
         {
             byte[] pole = new Byte[43];
@@ -143,6 +184,7 @@ namespace Kontrola
             Nehnutelnost neh = new Nehnutelnost(pole);
             return neh;
         }
+
         public List<string> Vyhladaj(int ic)
         {
             var zaz = DHPodlaCisla.FInd(new ZaznamPodlaCisla(-1, ic));
@@ -159,13 +201,15 @@ namespace Kontrola
 
             return null;
         }
+
         public List<string> Vyhladaj(int sc, string nazov)
         {
             while (nazov.Length < 15)
             {
                 nazov += ";";
             }
-            var zaz = DHPodlaNazvu.FInd(new ZoznamPodlaNazvuACisla(-1, sc,nazov));
+
+            var zaz = DHPodlaNazvu.FInd(new ZoznamPodlaNazvuACisla(-1, sc, nazov));
             if (zaz != null)
             {
                 var neh = citaj(zaz.Adresa);
@@ -179,7 +223,8 @@ namespace Kontrola
 
             return null;
         }
-        public void ZmenIC(int sic,int nic,string popis)
+
+        public void ZmenIC(int sic, int nic, string popis)
         {
             var zaz = DHPodlaCisla.FInd(new ZaznamPodlaCisla(-1, sic));
             if (zaz != null)
@@ -188,6 +233,7 @@ namespace Kontrola
                 {
                     popis += ";";
                 }
+
                 var neh = citaj(zaz.Adresa);
                 DHPodlaCisla.Delete(new ZaznamPodlaCisla(-1, neh.IdenCislo));
                 neh.IdenCislo = nic;
@@ -197,7 +243,8 @@ namespace Kontrola
 
             }
         }
-        public void ZmenNa(int ic, int sc,string nazov, string popis)
+
+        public void ZmenNa(int ic, int sc, string nazov, string popis)
         {
             var zaz = DHPodlaCisla.FInd(new ZaznamPodlaCisla(-1, ic));
             if (zaz != null)
@@ -206,10 +253,12 @@ namespace Kontrola
                 {
                     popis += ";";
                 }
+
                 while (nazov.Length < 15)
                 {
                     nazov += ";";
                 }
+
                 var neh = citaj(zaz.Adresa);
                 DHPodlaNazvu.Delete(new ZoznamPodlaNazvuACisla(-1, neh.SupCislo, neh.NazovKaT));
                 neh.SupCislo = sc;
@@ -220,6 +269,7 @@ namespace Kontrola
 
             }
         }
+
         public void ZmenPopis(int ic, string popis)
         {
             var zaz = DHPodlaCisla.FInd(new ZaznamPodlaCisla(-1, ic));
@@ -229,15 +279,17 @@ namespace Kontrola
                 {
                     popis += ";";
                 }
+
                 var neh = citaj(zaz.Adresa);
                 neh.Popis = popis;
-                Zapis(zaz.Adresa,neh.ToByArray());
-         
+                Zapis(zaz.Adresa, neh.ToByArray());
+
             }
 
-           
+
         }
-        public void ZmenVS(int sic,int nic, int sc,string nazov, string popis)
+
+        public void ZmenVS(int sic, int nic, int sc, string nazov, string popis)
         {
             var zaz = DHPodlaCisla.FInd(new ZaznamPodlaCisla(-1, sic));
             if (zaz != null)
@@ -246,18 +298,20 @@ namespace Kontrola
                 {
                     popis += ";";
                 }
+
                 while (nazov.Length < 15)
                 {
                     nazov += ";";
                 }
+
                 var neh = citaj(zaz.Adresa);
-                DHPodlaNazvu.Delete(new ZoznamPodlaNazvuACisla(-1,neh.SupCislo,neh.NazovKaT));
-                DHPodlaCisla.Delete(new ZaznamPodlaCisla(-1,neh.IdenCislo));
+                DHPodlaNazvu.Delete(new ZoznamPodlaNazvuACisla(-1, neh.SupCislo, neh.NazovKaT));
+                DHPodlaCisla.Delete(new ZaznamPodlaCisla(-1, neh.IdenCislo));
                 neh.IdenCislo = nic;
                 neh.SupCislo = sc;
                 neh.NazovKaT = nazov;
                 neh.Popis = popis;
-                Zapis(zaz.Adresa,neh.ToByArray());
+                Zapis(zaz.Adresa, neh.ToByArray());
                 DHPodlaNazvu.Add(new ZoznamPodlaNazvuACisla(zaz.Adresa, neh.SupCislo, neh.NazovKaT));
                 DHPodlaCisla.Add(new ZaznamPodlaCisla(zaz.Adresa, neh.IdenCislo));
 
@@ -265,9 +319,10 @@ namespace Kontrola
 
 
         }
+
         public void Odstran(int sup, string nazov)
         {
-            Nehnutelnost neh = new Nehnutelnost(sup,-1,nazov,"");
+            Nehnutelnost neh = new Nehnutelnost(sup, -1, nazov, "");
             var zaz = DHPodlaNazvu.FInd(new ZoznamPodlaNazvuACisla(-1, neh.SupCislo, neh.NazovKaT));
             if (zaz != null)
             {
@@ -280,6 +335,7 @@ namespace Kontrola
             }
 
         }
+
         public List<Tuple<int, string>> celySuborHlavny()
         {
             _reader.Close();
@@ -295,13 +351,14 @@ namespace Kontrola
                 var pomPole = new byte[43];
                 System.Buffer.BlockCopy(pole, i * 43, pomPole, 0, 43);
                 var neh = new Nehnutelnost(pomPole);
-                listZobraz.Add(new Tuple<int, string>(neh.IdenCislo,"Adresa: "+i+"  " +neh.ToString()));
+                listZobraz.Add(new Tuple<int, string>(neh.IdenCislo, "Adresa: " + i + "  " + neh.ToString()));
 
             }
 
             return listZobraz;
 
         }
+
         public List<Tuple<int, string>> VypisSuborSNazvom()
         {
             var list = DHPodlaNazvu.Prever();
@@ -315,12 +372,15 @@ namespace Kontrola
                 {
                     str += "   " + blockRecord.ToString();
                 }
+
                 listZobraz.Add(new Tuple<int, string>(block.PocetPlatnychRec, str));
 
             }
+
             return listZobraz;
 
         }
+
         public List<Tuple<int, string>> VypisSuborIdent()
         {
             var list = DHPodlaCisla.Prever();
@@ -334,19 +394,23 @@ namespace Kontrola
                 {
                     str += "   " + blockRecord.ToString();
                 }
+
                 listZobraz.Add(new Tuple<int, string>(block.PocetPlatnychRec, str));
 
             }
+
             return listZobraz;
 
         }
+
         public void skrat(int a)
         {
             fs.SetLength(Math.Max(0, fs.Length - (
-43 * a)));
+                                         43 * a)));
             fs.Flush();
 
         }
+
         public bool skratPole(int adresa)
         {
             bool ret = false;
@@ -363,12 +427,14 @@ namespace Kontrola
                         break;
                     }
                 }
+
                 if (a != 0)
                 {
                     skrat(a);
                     ret = true;
                 }
             }
+
             return ret;
         }
 
@@ -377,12 +443,44 @@ namespace Kontrola
             int a = 0;
             for (int i = 1; i < kat + 1; i++)
             {
-                for (int j = 1; j < neh+1; j++)
+                for (int j = 1; j < neh + 1; j++)
                 {
-                    PridajNehnutelnost(j, "Kataster" + i,"Popis"+a,a);
+                    PridajNehnutelnost(j, "Kataster" + i, "Popis" + a, a);
                     a++;
                 }
             }
         }
+
+        public void Uloz()
+        {
+            DHPodlaCisla.UlozSa();
+            DHPodlaNazvu.UlozSa();
+            FileStream fs = new FileStream("hlavnySubor.csv", FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs);
+            sw.WriteLine(Adresa);
+            if (volneAdresy.Count == 0)
+            {
+                sw.WriteLine("X");
+            }
+
+            foreach (var i in volneAdresy)
+            {
+                sw.Write(i + ";");
+            }
+            sw.Flush();
+            sw.Close();
+            fs.Close();
+        }
+
+        public void Zatvor()
+        {
+            DHPodlaCisla.zatvot();
+            DHPodlaNazvu.zatvot();
+            _reader.Close();
+            _writer.Close();
+            fs.Close();
+        }
+
+       
     }
 }

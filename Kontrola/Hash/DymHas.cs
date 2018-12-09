@@ -7,6 +7,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 
 namespace audsSem2
@@ -35,55 +36,163 @@ namespace audsSem2
             PocetVBloku = pocetVBloku;
             Adresa = 0;
         }
+        public DymHas(StreamReader sr,T data)
+        {
+            _typ = data;
+            var line = sr.ReadLine();
+            var pole = line.Split(';');
+            Adresa = Int32.Parse(pole[0]);
+            PocetVBloku = Int32.Parse(pole[1]);
+            DlzkaHashu = Int32.Parse(pole[2]);
+            AdresaUlozenia = pole[3];
+            AdresaSuboru = pole[4];
+            _zapisovac = new Zapisovac<T>(AdresaSuboru, new Block<T>(PocetVBloku, 0, data));
+            line = sr.ReadLine();
+            pole = line.Split(';');
+            volneBloky = new List<int>();
+            if (pole[0] != "X")
+            {
+                for (int i = 0; i < pole.Length - 1; i++)
+                {
+                    if (pole[i] !="")
+                    {
+                        volneBloky.Add(Int32.Parse(pole[i]));
+                    }
+                }
+            }
 
-        //public void UlozSa()
-        //{
-        //    FileStream fs = new FileStream(AdresaUlozenia,FileMode.Create);
-        //    StreamWriter sw = new StreamWriter(fs);
-        //    sw.WriteLine(Adresa + ";" + PocetVBloku + ";" + DlzkaHashu + ";" + AdresaUlozenia+";"+AdresaSuboru);
-        //    foreach (var i in volneBloky)
-        //    {
-        //        sw.Write(i+";");
-        //    }
-        //    if (Root == null)
-        //    {
-        //        return;
-        //    }
-        //    Queue<Node> queue = new Queue<Node>();
-        //    queue.Enqueue(Root);
-        //    int thisLevel = 1;
-        //    int nextLevel = 0;
-        //    Node node;
-        //    while (queue.Any())
-        //    {
-        //        for (int i = 0; i < thisLevel; i++)
-        //        {
-        //            node = queue.Dequeue();
-        //            traversal.append(node.data); // prida
-        //            if (node.left != null && node.right != null)
-        //            {
-        //                nextLevel += 2;
-        //                queue.add(node.left);
-        //                queue.add(node.right);
-        //            }
-        //            else if (node.left != null || node.right != null)
-        //            {
-        //                nextLevel += 1;
-        //                if (node.left != null)
-        //                {
-        //                    queue.add(node.left);
-        //                }
-        //                else
-        //                {
-        //                    queue.add(node.right);
-        //                }
-        //            }
-        //        }
-        //        thisLevel = nextLevel;
-        //        nextLevel = 0;
-        //    }
-        //    return traversal.toString();
-        //}
+            List<InternalNode> listNode = new List<InternalNode>();
+            while (!sr.EndOfStream)
+            {
+                line = sr.ReadLine();
+                pole = line.Split(';');
+                if (pole[0] == "e")
+                {
+                    ExternalNode n = new ExternalNode(Int32.Parse(pole[3]), Int32.Parse(pole[1]));
+                    if (Root == null)
+                        Root = n;
+                    n.PocetZaznamov = Int32.Parse(pole[2]);
+                    for (int i = 0; i < listNode.Count; i++)
+                    {
+                        InternalNode pn = listNode[i];
+                        if (pn.Left == null)
+                        {
+                            pn.Left = n;
+                            n.Parent = pn;
+                            break;
+                        }
+                        if (pn.Right == null)
+                        {
+                            pn.Right = n;
+                            n.Parent = pn;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    
+                    InternalNode n = new InternalNode(Int32.Parse(pole[1]));
+                    if (Root == null)
+                        Root = n;
+                    for (int i = 0; i < listNode.Count; i++)
+                    {
+                        InternalNode pn = listNode[i];
+                        if (pn.Left == null)
+                        {
+                            pn.Left = n;
+                            n.Parent = pn;
+                            break;
+                        }
+                        if (pn.Right == null)
+                        {
+                            pn.Right = n;
+                            n.Parent = pn;
+                            break;
+                        }
+                    }
+                    listNode.Add(n);
+                }
+            }
+            sr.Close();
+        }
+        public void UlozSa()
+        {
+            FileStream fs = new FileStream(AdresaUlozenia, FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs);
+            sw.WriteLine(Adresa + ";" + PocetVBloku + ";" + DlzkaHashu + ";" + AdresaUlozenia + ";" + AdresaSuboru);
+            if (volneBloky.Count == 0)
+            {
+                sw.WriteLine("X");
+            }
+
+            foreach (var i in volneBloky)
+            {
+                sw.Write(i + ";");
+            }
+
+            if (volneBloky.Count != 0)
+            {
+                sw.WriteLine();
+            }
+            if (Root == null)
+            {
+                sw.Flush();
+                sw.Close();
+                return;
+            }
+            Queue<Node> queue = new Queue<Node>();
+            queue.Enqueue(Root);
+            int thisLevel = 1;
+            int nextLevel = 0;
+            Node node;
+            List<Node> list = new List<Node>();
+            while (queue.Any())
+            {
+                for (int i = 0; i < thisLevel; i++)
+                {
+                    node = queue.Dequeue();
+                    if (node is ExternalNode)
+                    {
+                        sw.WriteLine("e;"+((ExternalNode)node).Adresa+";"+((ExternalNode)node).PocetZaznamov + ";"+
+                                     ((ExternalNode)node).HlbkaBloku);
+                    }
+                    else
+                    {
+                        sw.WriteLine("i;"+((InternalNode) node).HlbkaBloku);
+                    }
+                    sw.Flush();
+                    list.Add(node); // prida
+                    if (node is InternalNode)
+                    {
+                        
+                        if (((InternalNode)node).Left != null && ((InternalNode)node).Right != null)
+                        {
+                            nextLevel += 2;
+                            queue.Enqueue(((InternalNode)node).Left);
+                            queue.Enqueue(((InternalNode)node).Right);
+                        }
+                        else if (((InternalNode)node).Left != null || ((InternalNode)node).Right != null)
+                        {
+                            nextLevel += 1;
+                            if (((InternalNode)node).Left != null)
+                            {
+                                queue.Enqueue(((InternalNode)node).Left);
+                            }
+                            else
+                            {
+                                queue.Enqueue(((InternalNode)node).Right);
+                            }
+                        }
+                    }
+                }
+                thisLevel = nextLevel;
+                nextLevel = 0;
+            }
+           sw.Flush();
+            sw.Close();
+            fs.Close();
+        }
 
         public int AkyBit(int pozicia, byte[] pole)
         {

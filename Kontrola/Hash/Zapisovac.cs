@@ -16,7 +16,7 @@ namespace audsSem2
         {
             Typ = data;
             NazovSuboru = nazovSuboru;
-            fs = new FileStream(nazovSuboru, FileMode.Create, FileAccess.ReadWrite,
+            fs = new FileStream(nazovSuboru, FileMode.OpenOrCreate, FileAccess.ReadWrite,
                 FileShare.Read);
             _reader = new BinaryReader(fs);
             _writer = new BinaryWriter(fs);
