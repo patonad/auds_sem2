@@ -314,10 +314,14 @@ namespace Kontrola
 
             int neh;
             int kat;
+            int bi;
+            int bn;
             try
             {
                 kat = Int32.Parse(GPK.Text);
                 neh = Int32.Parse(GPN.Text);
+                bi = Int32.Parse(GPBI.Text);
+                bn = Int32.Parse(GPBN.Text);
             }
             catch (Exception exception)
             {
@@ -334,7 +338,7 @@ namespace Kontrola
             fs.Close();
             fs = new FileStream("ZoznamPodlaNazvuACisla.bin", FileMode.Create);
             fs.Close();
-            DB = new Databazka();
+            DB = new Databazka(bi,bn);
             DB.Generuj(kat,neh);
         }
 

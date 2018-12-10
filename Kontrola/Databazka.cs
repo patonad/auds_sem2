@@ -20,13 +20,13 @@ namespace Kontrola
         private FileStream fs;
         private string NazovSuboru;
 
-        public Databazka()
+        public Databazka(int bi, int bn)
         {
             Adresa = 0;
             volneAdresy = new List<int>();
-            DHPodlaCisla = new DymHas<ZaznamPodlaCisla>(33, new ZaznamPodlaCisla(), 4, "ZaznamPodlaCisla.bin",
+            DHPodlaCisla = new DymHas<ZaznamPodlaCisla>(33, new ZaznamPodlaCisla(), bi, "ZaznamPodlaCisla.bin",
                 "ZaznamPodlaCislaDH.csv");
-            DHPodlaNazvu = new DymHas<ZoznamPodlaNazvuACisla>(153, new ZoznamPodlaNazvuACisla(), 4,
+            DHPodlaNazvu = new DymHas<ZoznamPodlaNazvuACisla>(153, new ZoznamPodlaNazvuACisla(), bn,
                 "ZoznamPodlaNazvuACisla.bin", "ZoznamPodlaNazvuACislaDH.csv");
             NazovSuboru = "data.bin";
             fs = new FileStream(NazovSuboru, FileMode.Create, FileAccess.ReadWrite,

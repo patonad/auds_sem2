@@ -139,7 +139,11 @@
             <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="427,236,0,0" TextWrapping="Wrap" Text="Pocet nehnutelnosti v katastri:" VerticalAlignment="Top"/>
             <TextBox FontSize="15" Name="GPK" Height="24" Margin="646,192,184.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" RenderTransformOrigin="4.141,6.2"/>
             <TextBox FontSize="15" Name="GPN" Height="23" Margin="646,234,183.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-            <Button FontSize="15" Content="Generuj" HorizontalAlignment="Left" Margin="516,274,0,0" VerticalAlignment="Top" Width="243" Click="Button_Click_13"/>
+            <Button FontSize="15" Content="Generuj" HorizontalAlignment="Left" Margin="534,359,0,0" VerticalAlignment="Top" Width="243" Click="Button_Click_13"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="427,276,0,0" TextWrapping="Wrap" Text="Pocet v bloku Iden cislo:" VerticalAlignment="Top"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="427,310,0,0" TextWrapping="Wrap" Text="Pocet v bloku Nazov s s.:" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" x:Name="GPBI" Height="23" Margin="646,276,183.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <TextBox FontSize="15" x:Name="GPBN" Height="23" Margin="646,314,183.4,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
         </Grid>
 
     </Grid>
