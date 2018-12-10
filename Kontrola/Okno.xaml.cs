@@ -49,6 +49,7 @@ namespace Kontrola
             Odstran.Visibility = Visibility.Collapsed;
             Vypis.Visibility = Visibility.Collapsed;
             Generuj.Visibility = Visibility.Collapsed;
+            NovySubor.Visibility = Visibility.Collapsed;
         }
         // pridaj
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -358,6 +359,43 @@ namespace Kontrola
                 hsr.Close();
                 fs.Close();
             }
+        }
+
+        private void Button_Click_16(object sender, RoutedEventArgs e)
+        {
+            Schovaj();
+            NovySubor.Visibility = Visibility.Visible;
+        }
+
+        private void Button_Click_17(object sender, RoutedEventArgs e)
+        {
+            if (NBI.Text == "" || NBN.Text == "")
+            {
+                MessageBox.Show("Nezadal si daky udaj");
+                return;
+            }
+            int bi;
+            int bn;
+            try
+            {
+                bi = Int32.Parse(NBI.Text);
+                bn = Int32.Parse(NBN.Text);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Zle zadane cislo");
+                return;
+
+            }
+            if (DB != null)
+                DB.Zatvor();
+            FileStream fs = new FileStream("data.bin", FileMode.Create);
+            fs.Close();
+            fs = new FileStream("ZaznamPodlaCisla.bin", FileMode.Create);
+            fs.Close();
+            fs = new FileStream("ZoznamPodlaNazvuACisla.bin", FileMode.Create);
+            fs.Close();
+            DB = new Databazka(bi, bn);
         }
     }
 }

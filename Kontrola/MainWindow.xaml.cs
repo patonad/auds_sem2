@@ -220,12 +220,12 @@ namespace Kontrola
         {
 
             InitializeComponent();
-            //hash = new DymHas<Record>(4, new Record(), 1, "pokus.bin", "strom.csv");
-            testuj2();
+            hash = new DymHas<Record>(20, new Record(), 2, "pokus.bin", "strom.csv");
+            //testuj2();
 
-            //hash.Add(new Record(8, "4045"));
-            //hash.Add(new Record(16, "2047"));
-            //hash.Add(new Record(4, "cc015"));
+            hash.Add(new Record(127, "4045"));
+            hash.Add(new Record(255, "2047"));
+            hash.Add(new Record(511, "cc015"));
             //hash.Add(new Record(12, "dd04"));
             //hash.Add(new Record(2, "ee05"));
             //hash.Add(new Record(10, "ee06"));
@@ -245,7 +245,7 @@ namespace Kontrola
             //hash.Add(new Record(3, "0003"));
             //hash.Add(new Record(1, "0001"));
             //hash.Add(new Record(5, "0005"));
-        
+
 
             //hash.UlozSa();
             //hash.zatvot();
@@ -288,7 +288,7 @@ namespace Kontrola
             //}
 
             //DG.ItemsSource = listZobraz;
-             Prekresli();
+            Prekresli();
 
         }
 

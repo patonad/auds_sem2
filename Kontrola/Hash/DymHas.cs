@@ -162,6 +162,8 @@ namespace audsSem2
                         sw.WriteLine("i;"+((InternalNode) node).HlbkaBloku);
                     }
                     sw.Flush();
+                    if(node is ExternalNode)
+                        continue;
                     list.Add(node); // prida
                     if (node is InternalNode)
                     {
