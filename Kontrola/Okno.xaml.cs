@@ -75,8 +75,16 @@ namespace Kontrola
                     return;
                 }
 
-                DB.PridajNehnutelnost(sup, PNK.Text, PPO.Text, iden);
-                LWP.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
+                try
+                {
+                    DB.PridajNehnutelnost(sup, PNK.Text, PPO.Text, iden);
+                    LWP.ItemsSource = DB.celySuborHlavnyPlatneZaznamy();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Dosla hesovacka");
+                }
+               
             }
         }
 
@@ -228,8 +236,15 @@ namespace Kontrola
                 if (VVIC.Text == IC.ToString() && VVSC.Text == SC.ToString() && VVNK.Text == nazov &&
                     VVPO.Text != popis)
                 {
-                    DB.ZmenPopis(IC, VVPO.Text);
-                    return;
+                    try
+                    {
+                        DB.ZmenPopis(IC, VVPO.Text);
+                        return;
+                    }
+                    catch (Exception )
+                    {
+                        MessageBox.Show("Dosla hesovacka");
+                    }
                 }
 
                 //vsetko
@@ -246,9 +261,16 @@ namespace Kontrola
                         MessageBox.Show("Zle zadane cislo");
                         return;
                     }
-
-                    DB.ZmenVS(IC, ic, sc, VVNK.Text, VVPO.Text);
-                    return;
+                    try
+                    {
+                        DB.ZmenVS(IC, ic, sc, VVNK.Text, VVPO.Text);
+                        return;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Dosla hesovacka");
+                    }
+                   
                 }
 
                 // nazov alebo sup
@@ -264,9 +286,16 @@ namespace Kontrola
                         MessageBox.Show("Zle zadane cislo");
                         return;
                     }
-
-                    DB.ZmenNa(IC, sc, VVNK.Text, VVPO.Text);
-                    return;
+                    try
+                    {
+                        DB.ZmenNa(IC, sc, VVNK.Text, VVPO.Text);
+                        return;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Dosla hesovacka");
+                    }
+                    
                 }
 
                 if (VVIC.Text != IC.ToString())
@@ -281,9 +310,16 @@ namespace Kontrola
                         MessageBox.Show("Zle zadane cislo");
                         return;
                     }
-
-                    DB.ZmenIC(IC, ic, VVPO.Text);
-                    return;
+                    try
+                    {
+                        DB.ZmenIC(IC, ic, VVPO.Text);
+                        return;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Dosla hesovacka");
+                    }
+                    
                 }
             }
         }

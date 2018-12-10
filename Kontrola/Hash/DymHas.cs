@@ -448,7 +448,7 @@ namespace audsSem2
                                 ((ExternalNode) roo.Left).Adresa = DajAdresu();
                                 blok1.SvojaAdresa = ((ExternalNode) roo.Left).Adresa;
                                 ((ExternalNode) roo.Left).PocetZaznamov = blok1.PocetPlatnychRec;
-                                _zapisovac.zapis(blok2.SvojaAdresa, blok2.ToByteArrays());
+                                _zapisovac.zapis(blok1.SvojaAdresa, blok1.ToByteArrays());                             //tuto
                             }
                         }
 
@@ -995,16 +995,20 @@ namespace audsSem2
 
         public bool Add(T data)
         {
-            if (!Contiens(data))
-            {
-                Block<T> b = null;
+              Block<T> b = null;
                 if (Root == null)
                 {
                     Root = NajdiExternalNode(data, ref b);
+                    for (int i = 0; i < b.PocetPlatnychRec; i++)
+                    {
+                        if (b.Records[i].Equals(data))
+                        {
+                            return false;
+                        }
+                    }
                     ((ExternalNode) Root).PocetZaznamov++;
                     b.AddRecord(data);
                     _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
-                    Console.WriteLine("Vlozil do roota prvy");
                     return true;
                 }
 
@@ -1012,63 +1016,20 @@ namespace audsSem2
 
                 if (node.PocetZaznamov < PocetVBloku)
                 {
+                    for (int i = 0; i < b.PocetPlatnychRec; i++)
+                    {
+                        if (b.Records[i].Equals(data))
+                        {
+                            _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
+                            return false;
+                        }
+                    }
                     node.PocetZaznamov++;
                     b.AddRecord(data);
                     _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
                     return true;
                 }
-                //else
-                //{
-                //    if (b.PreplnovaciBlok == -1)
-                //    {
-                //        var blok = new Block<T>(PocetVBloku, DajAdresu(), _typ);
-                //        blok.AddRecord(data);
-                //        b.PreplnovaciBlok = blok.SvojaAdresa;
-                //        node.PocetZaznamov++;
-                //        _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
-                //        _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
-                //        return true;
-                //    }
-                //    else
-                //    {
-                //        var blok = new Block<T>(_zapisovac.citaj(b.PreplnovaciBlok), _typ);
-                //        while (true)
-                //        {
-                //            if (blok.PocetPlatnychRec < PocetVBloku)
-                //            {
-                //                blok.AddRecord(data);
-                //                node.PocetZaznamov++;
-                //                _zapisovac.zapis(b.SvojaAdresa, b.ToByteArrays());
-                //                _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
-                //                return true;
-                //            }
-
-
-                //            if (blok.PreplnovaciBlok == -1)
-                //            {
-                //                Block<T> blok1 = new Block<T>(PocetVBloku, DajAdresu(), _typ);
-                //                blok.PreplnovaciBlok = blok1.SvojaAdresa;
-                //                blok1.AddRecord(data);
-                //                _zapisovac.zapis(blok.SvojaAdresa, blok.ToByteArrays());
-                //                _zapisovac.zapis(blok1.SvojaAdresa, blok1.ToByteArrays());
-                //                node.PocetZaznamov++;
-                //                return true;
-                //            }
-                //            else
-                //            {
-                //                b = blok;
-                //                blok = new Block<T>(_zapisovac.citaj(blok.PreplnovaciBlok), _typ); ;
-                //            }
-                //        }
-                //    }
-                //    return false;
-                //}
-            }
-            else
-            {
-               throw new Exception("Zly hash");
-            }
-
+         
             return false;
         }
     }

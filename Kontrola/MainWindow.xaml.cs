@@ -223,9 +223,10 @@ namespace Kontrola
             hash = new DymHas<Record>(20, new Record(), 2, "pokus.bin", "strom.csv");
             //testuj2();
 
-            hash.Add(new Record(127, "4045"));
+           hash.Add(new Record(127, "4045"));
             hash.Add(new Record(255, "2047"));
             hash.Add(new Record(511, "cc015"));
+            hash.Delete(new Record(511, "cc015"));
             //hash.Add(new Record(12, "dd04"));
             //hash.Add(new Record(2, "ee05"));
             //hash.Add(new Record(10, "ee06"));
